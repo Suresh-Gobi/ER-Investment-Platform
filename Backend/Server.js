@@ -1,18 +1,18 @@
-
-
 const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
 const cors = require('cors');
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// const locationRoutes = require("./Routes/Location.routes");
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const projectRoutes = require('./routes/projectRoutes');
 
 const app = express();
-
 require('dotenv').config();
 
-app.use(cors({ origin: '*' })); 
+app.use(cors({ origin: '*' }));
 const server = http.createServer(app);
 const io = socketIO(server);
 
@@ -36,8 +36,41 @@ db.once("open", () => {
 // Body parser middleware
 app.use(bodyParser.json());
 
+// Express session middleware
+app.use(session({
+  secret: 'your-secret-key',
+  resave: true,
+  saveUninitialized: true
+}));
+
+// Initialize Passport and session
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Configure Google OAuth2 Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // You can create or retrieve a user from the database here
+    // For demonstration, let's assume we're using the profile information directly
+    return done(null, profile);
+  }
+));
+
+// Serialize and deserialize user
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 // Use routes
-// app.use("/api/location", locationRoutes);
+app.use('/api/projects', projectRoutes);
 
 // Set up Socket.io connection
 io.on("connection", (socket) => {
