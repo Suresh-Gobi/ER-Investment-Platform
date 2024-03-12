@@ -7,6 +7,7 @@ import "./App.css";
 //Import Pages
 import Home from "./Pages/Home/Home";
 import Signup from "./Pages/Signup/Signup";
+import Login from "./Pages/Login/Login";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,6 +18,7 @@ function App() {
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/singup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </>
