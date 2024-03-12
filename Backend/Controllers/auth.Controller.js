@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../Models/User.Model');
 const { generateOTP } = require('../Utils/generateOTP');
+const User = require('../Models/User.Model');
 const { sendVerificationEmail } = require('../Utils/emailOTP');
 
 exports.signup = async (req, res) => {
@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
         }
 
         // Generate OTP
-        const otp = generateOTP(); // Implement generateOTP function
+        const otp = generateOTP(6); // Implement generateOTP function
 
         // Send OTP to user's email
         await sendVerificationEmail(email, otp);
