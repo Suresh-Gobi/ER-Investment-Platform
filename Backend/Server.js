@@ -5,16 +5,15 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require('express-session');
-const passport = require('passport');
+const passport = require('./Utils/passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const projectRoutes = require('./routes/projectRoutes');
+const authRoutes = require('./Routes/auth.Route');
 
 const app = express();
 require('dotenv').config();
 
+// Use CORS middleware
 app.use(cors({ origin: '*' }));
-const server = http.createServer(app);
-const io = socketIO(server);
 
 // Connect to MongoDB using URI from environment variables
 mongoose.connect(
@@ -38,41 +37,21 @@ app.use(bodyParser.json());
 
 // Express session middleware
 app.use(session({
-  secret: 'your-secret-key',
+  secret: process.env.SESSION_SECRET, // Use a secure secret
   resave: true,
   saveUninitialized: true
 }));
 
-// Initialize Passport and session
-app.use(passport.initialize());
-app.use(passport.session());
+// Initialize Passport middleware
+passport(app);
 
-// Configure Google OAuth2 Strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
-  },
-  (accessToken, refreshToken, profile, done) => {
-    // You can create or retrieve a user from the database here
-    // For demonstration, let's assume we're using the profile information directly
-    return done(null, profile);
-  }
-));
-
-// Serialize and deserialize user
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
-// Use routes
-app.use('/api/projects', projectRoutes);
+// Use authentication routes
+app.use('/auth', authRoutes);
 
 // Set up Socket.io connection
+const server = http.createServer(app);
+const io = socketIO(server);
+
 io.on("connection", (socket) => {
   console.log("A user connected");
   // Handle disconnect if needed
@@ -85,6 +64,4 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  // Add MongoDB connected message here
-  console.log("Connecting to MongoDB...");
 });
