@@ -54,34 +54,35 @@ exports.signup = async (req, res) => {
 };
 
 exports.verifyOTP = async (req, res) => {
-  const { email, otp } = req.body;
-
-  try {
-      // Find the user with the provided email
-      const user = await User.findOne({ email });
-
+    const { email, otp } = req.body;
+  
+    try {
+      // Find the user with the provided email (case-insensitive)
+      const user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+  
       // Check if the user exists
       if (!user) {
-          return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'User not found' });
       }
-
-      // Check if the provided OTP matches the stored OTP
-      if (user.otp !== otp) {
-          return res.status(400).json({ message: 'Invalid OTP' });
+  
+      // Check if the provided OTP matches the stored OTP (case-insensitive)
+      if (user.otp.toString().toLowerCase() !== otp.toString().toLowerCase()) {
+        return res.status(400).json({ message: 'Invalid OTP' });
       }
-
+  
       // Update the isVerified field to true
       user.isVerified = true;
-
+  
       // Save the updated user document
       await user.save();
-
+  
       res.status(200).json({ message: 'OTP verified successfully', isVerified: true });
-  } catch (error) {
+    } catch (error) {
       console.error('Error in verifying OTP:', error);
       res.status(500).json({ error: 'Internal server error' });
-  }
-};
+    }
+  };
+  
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;

@@ -12,6 +12,8 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [apiMessage, setApiMessage] = useState('');
+  const [otp, setOtp] = useState('');
+  const [showOtpFields, setShowOtpFields] = useState(false);
 
   const handleSignup = () => {
     if (password !== confirmPassword) {
@@ -45,6 +47,8 @@ export default function Signup() {
         console.log('Signup successful:', data);
         // Set the API return message
         setApiMessage(data.message);
+        // Show OTP input fields
+        setShowOtpFields(true);
       })
       .catch((error) => {
         console.error('Error signing up:', error);
@@ -55,6 +59,38 @@ export default function Signup() {
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleOtpChange = (e) => {
+    setOtp(e.target.value);
+  };
+
+  const handleVerifyOtp = () => {
+    // Send OTP verification request to API
+    console.log('Verifying OTP:', otp);
+
+    fetch('http://localhost:5000/auth/user/verifyotp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, otp }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Invalid OTP');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('OTP verified successfully:', data);
+        // Redirect to login page or perform any other action
+        window.location.href = '/login';
+      })
+      .catch((error) => {
+        console.error('Error verifying OTP:', error);
+        setError('Error verifying OTP: ' + error.message);
+      });
   };
 
   return (
@@ -122,7 +158,21 @@ export default function Signup() {
         />
         {error && <Typography color="error">{error}</Typography>}
         {apiMessage && <Typography>{apiMessage}</Typography>}
-        <Button variant="contained" onClick={handleSignup}>Sign Up</Button>
+        {showOtpFields && (
+          <div>
+            <TextField
+              label="Enter OTP"
+              variant="outlined"
+              value={otp}
+              onChange={handleOtpChange}
+              sx={{ m: 1, minWidth: 300 }}
+            />
+            <Button variant="contained" onClick={handleVerifyOtp}>Verify OTP</Button>
+          </div>
+        )}
+        {!showOtpFields && (
+          <Button variant="contained" onClick={handleSignup}>Sign Up</Button>
+        )}
         <Typography variant="body2" sx={{ marginTop: '10px' }}>
           Already have an account? <a href="/login">Login</a>
         </Typography>

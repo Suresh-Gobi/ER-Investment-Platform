@@ -65,7 +65,7 @@ router.get("/logout", (req, res) => {
 
 // Traditional Signup
 router.post("/user/signup", authController.signup);
-router.post("/user/verify-otp", authController.verifyOTP);
+router.post("/user/verifyotp", authController.verifyOTP);
 
 router.post("/user/login", authController.login);
 
