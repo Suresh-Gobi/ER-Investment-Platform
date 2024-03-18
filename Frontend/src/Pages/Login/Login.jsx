@@ -28,8 +28,8 @@ export default function Login() {
 
       const data = await response.json();
 
-      // Example of handling the JWT token (replace with your actual token handling logic)
-      console.log("Token:", data.token);
+      // Save the token in local storage
+      localStorage.setItem("token", data.token);
 
       // Clear any previous error messages
       setError("");

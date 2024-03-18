@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Menu, MenuItem, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, IconButton, Typography } from '@mui/material';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import CssBaseline from '@mui/material/CssBaseline';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import Overview from "./Menus/Overview"; // Import the Overview component
+import React, { useState } from "react";
+import { styled, useTheme } from "@mui/material/styles";
+import {
+  Avatar,
+  Menu,
+  MenuItem,
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import CssBaseline from "@mui/material/CssBaseline";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import OverviewIcon from "@mui/icons-material/Assessment"; // Import the icon for Overview
+import ProjectsIcon from "@mui/icons-material/Work"; // Import the icon for Projects
+import ChatIcon from "@mui/icons-material/Chat"; // Import the icon for Chat
+import PaymentIcon from "@mui/icons-material/Payment"; // Import the icon for Payment
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the new icon for Profile
+import Overview from "./Menus/Overview";
+import Projects from "./Menus/Projects";
+import Profile from "./Menus/Profile";
 
 const drawerWidth = 240;
 
@@ -82,7 +102,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState("Overview"); // Set initial value to "Overview"
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -94,6 +114,24 @@ export default function MiniDrawer() {
 
   const handleMenuItemClick = (text) => {
     setSelectedItem(text);
+  };
+
+  // Function to render icon based on menu item
+  const renderIcon = (text) => {
+    switch (text) {
+      case "Overview":
+        return <OverviewIcon />;
+      case "Projects":
+        return <ProjectsIcon />;
+      case "Chat":
+        return <ChatIcon />;
+      case "Payment":
+        return <PaymentIcon />;
+      case "Profile":
+        return <AccountCircleIcon />; // Replace Profile icon with AccountCircleIcon
+      default:
+        return null;
+    }
   };
 
   return (
@@ -121,30 +159,39 @@ export default function MiniDrawer() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text) => (
+          {["Overview", "Projects", "Chat", "Payment", "Profile"].map((text) => (
             <ListItem
               key={text}
               button
               onClick={() => handleMenuItemClick(text)} // Pass the handleMenuItemClick function
-              sx={{ display: 'block' }}
+              sx={{ display: "block" }}
               selected={selectedItem === text}
             >
               <ListItemIcon>
-                {text === 'Inbox' ? <InboxIcon /> : <MailIcon />}
+                {renderIcon(text)} {/* Render the appropriate icon */}
               </ListItemIcon>
-              {open && <ListItemText primary={text} />} {/* Conditionally render the text based on open state */}
+              {open && <ListItemText primary={text} />}{" "}
+              {/* Conditionally render the text based on open state */}
             </ListItem>
           ))}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {selectedItem === "Inbox" && <Overview />} {/* Render Overview component based on selected item */}
+        {/* Render corresponding component based on selected item */}
+        {selectedItem === "Overview" && <Overview />}
+        {selectedItem === "Projects" && <Projects />}
+        {selectedItem === "Profile" && <Profile />}
+        {/* Add more conditions for other menu items */}
       </Box>
     </Box>
   );
