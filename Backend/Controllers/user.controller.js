@@ -1,5 +1,6 @@
 const express = require('express');
 const cloudinary = require('cloudinary').v2;
+const { validationResult } = require('express-validator');
 const AccountVerification = require('../Models/AccountVerification');
 
 const router = express.Router();
@@ -12,8 +13,14 @@ cloudinary.config({
 });
 
 // POST route for creating a new account verification
-router.post('/create', async (req, res) => {
+exports.createAccountVerification = async (req, res) => {
   try {
+    // Validate request body
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     // Extract data from request body
     const { fullName, address, phoneNumber, nic, dob, nationality, bankDetails, verifiedAccount, userId } = req.body;
 
@@ -45,6 +52,6 @@ router.post('/create', async (req, res) => {
     console.error('Error creating account verification:', error);
     res.status(500).json({ message: 'Server error' });
   }
-});
+};
 
 module.exports = router;
