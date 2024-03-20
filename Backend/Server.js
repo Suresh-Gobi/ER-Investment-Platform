@@ -6,11 +6,11 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require('express-session');
 const passport = require('./Utils/passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const authRoutes = require('./Routes/auth.Route');
+const userRoutes = require('./Routes/user.Route');
+require('dotenv').config();
 
 const app = express();
-require('dotenv').config();
 
 // Use CORS middleware
 app.use(cors({ origin: '*' }));
@@ -34,6 +34,7 @@ db.once("open", () => {
 
 // Body parser middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Express session middleware
 app.use(session({
@@ -47,6 +48,7 @@ passport(app);
 
 // Use authentication routes
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 // Set up Socket.io connection
 const server = http.createServer(app);

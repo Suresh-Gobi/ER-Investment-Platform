@@ -37,11 +37,11 @@ const accountVerificationSchema = new mongoose.Schema({
   },
   nicCopy: {
     type: String,
-    required: true,
+    // required: true,
   },
   bankBookCopy: {
     type: String,
-    required: true,
+    // required: true,
   },
   verifiedAccount: {
     type: Boolean,

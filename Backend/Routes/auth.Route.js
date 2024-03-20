@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const axios = require("axios");
 const authController = require("../Controllers/auth.Controller");
+// const userController = require('../Controllers/user.controller');
 const User = require("../Models/User.Model");
 const router = express.Router();
 const generateToken = require("../Utils/generateToken");
@@ -68,5 +69,6 @@ router.post("/user/signup", authController.signup);
 router.post("/user/verifyotp", authController.verifyOTP);
 
 router.post("/user/login", authController.login);
+// router.post('/account-verification', userController.createAccountVerification);
 
 module.exports = router;
