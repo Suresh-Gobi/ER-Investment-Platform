@@ -2,6 +2,7 @@ const multer = require('multer');
 const Upload = require('../Models/upload');
 const cloudinary = require('cloudinary').v2;
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
@@ -28,6 +29,11 @@ const uploadDocument = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
+    // Extract user ID from Authorization header token
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId;
+
     const result = await cloudinary.uploader.upload(req.file.path);
 
     const { name, email, address, phoneNumber, nic, dob, nationality, bankName, accountNumber, branch, bankCode, swiftCode, verifiedAccount } = req.body;
@@ -47,7 +53,8 @@ const uploadDocument = async (req, res) => {
       bankCode,
       swiftCode,
       verifiedAccount,
-      documentUrl
+      documentUrl,
+      userId // Assign the extracted userId here
     });
 
     await newUpload.save();
