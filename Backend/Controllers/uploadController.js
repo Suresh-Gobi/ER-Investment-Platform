@@ -1,4 +1,3 @@
-// uploadController.js
 const multer = require('multer');
 const Upload = require('../Models/upload');
 const cloudinary = require('cloudinary').v2;
@@ -31,10 +30,26 @@ const uploadDocument = async (req, res) => {
 
     const result = await cloudinary.uploader.upload(req.file.path);
 
-    const { name, email } = req.body;
+    const { name, email, address, phoneNumber, nic, dob, nationality, bankName, accountNumber, branch, bankCode, swiftCode, verifiedAccount } = req.body;
     const documentUrl = result.secure_url;
 
-    const newUpload = new Upload({ name, email, documentUrl });
+    const newUpload = new Upload({
+      name,
+      email,
+      address,
+      phoneNumber,
+      nic,
+      dob,
+      nationality,
+      bankName,
+      accountNumber,
+      branch,
+      bankCode,
+      swiftCode,
+      verifiedAccount,
+      documentUrl
+    });
+
     await newUpload.save();
 
     return res.status(201).json({ message: 'File uploaded successfully', upload: newUpload });
