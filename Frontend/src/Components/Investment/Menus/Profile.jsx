@@ -1,95 +1,93 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
+export default function Profile() {
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    nic: '',
+    dob: '',
+    nation: '',
+    bankName: '',
+    accountNumber: '',
+    branch: '',
+    bankCode: '',
+    shiftCode: '',
+    verifiedAccount: false,
+    file: null,
+  });
+
+  const token = localStorage.getItem('token'); // Assuming the JWT token is stored in localStorage
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: name === 'file' ? files[0] : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('nic', formData.nic);
+    formDataToSend.append('dob', formData.dob);
+    formDataToSend.append('nation', formData.nation);
+    formDataToSend.append('bankName', formData.bankName);
+    formDataToSend.append('accountNumber', formData.accountNumber);
+    formDataToSend.append('branch', formData.branch);
+    formDataToSend.append('bankCode', formData.bankCode);
+    formDataToSend.append('shiftCode', formData.shiftCode);
+    formDataToSend.append('verifiedAccount', formData.verifiedAccount);
+    formDataToSend.append('file', formData.file);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/uploads/upload',
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach the JWT token in the Authorization header
+          },
+        }
+      );
+      console.log(response.data);
+      // Add any additional handling or redirect logic here
+    } catch (error) {
+      console.error(error);
+      // Handle error
+    }
+  };
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+    <div>
+      <h1>Profile</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
+        <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Address" required />
+        <input type="text" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone" required />
+        <input type="text" name="nic" value={formData.nic} onChange={handleChange} placeholder="NIC" required />
+        <input type="date" name="dob" value={formData.dob} onChange={handleChange} placeholder="Date of Birth" required />
+        <input type="text" name="nation" value={formData.nation} onChange={handleChange} placeholder="Nationality" required />
+        <input type="text" name="bankName" value={formData.bankName} onChange={handleChange} placeholder="Bank Name" required />
+        <input type="text" name="accountNumber" value={formData.accountNumber} onChange={handleChange} placeholder="Account Number" required />
+        <input type="text" name="branch" value={formData.branch} onChange={handleChange} placeholder="Branch" required />
+        <input type="text" name="bankCode" value={formData.bankCode} onChange={handleChange} placeholder="Bank Code" required />
+        <input type="text" name="shiftCode" value={formData.shiftCode} onChange={handleChange} placeholder="Shift Code" required />
+        <div>
+          <label>
+            Verified Account:
+            <input type="checkbox" name="verifiedAccount" checked={formData.verifiedAccount} onChange={(e) => setFormData({ ...formData, verifiedAccount: e.target.checked })} />
+          </label>
+        </div>
+        <input type="file" name="file" onChange={handleChange} required />
+        <button type="submit">Submit</button>
+      </form>
     </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-export default function BasicTabs() {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleUploadNicCopy = (event) => {
-    // Handle NIC copy upload logic here
-  };
-
-  const handleUploadBankBookCopy = (event) => {
-    // Handle bank book copy upload logic here
-  };
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="General" {...a11yProps(0)} />
-          <Tab label="Account Verification" {...a11yProps(1)} />
-          <Tab label="Account Setting" {...a11yProps(2)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        {/* Content for General tab */}
-        <Typography>General Information</Typography>
-        {/* Add more fields as needed */}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        {/* Content for Account Verification tab */}
-        <Typography>Account Verification</Typography>
-        <TextField label="Full Name" variant="outlined" />
-        <TextField label="Address" variant="outlined" />
-        <TextField label="Phone Number" variant="outlined" />
-        {/* Add more text fields for other details */}
-        <Button variant="outlined" component="label">
-          Upload NIC Copy
-          <input type="file" hidden onChange={handleUploadNicCopy} />
-        </Button>
-        <Button variant="outlined" component="label">
-          Upload Bank Book Copy
-          <input type="file" hidden onChange={handleUploadBankBookCopy} />
-        </Button>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        {/* Content for Account Setting tab */}
-        <Typography>Account Settings</Typography>
-        {/* Add account setting options */}
-      </CustomTabPanel>
-    </Box>
   );
 }

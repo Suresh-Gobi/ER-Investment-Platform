@@ -52,9 +52,9 @@ const uploadDocument = async (req, res) => {
       branch,
       bankCode,
       swiftCode,
-      verifiedAccount,
+      verifiedAccount: false,
       documentUrl,
-      userId // Assign the extracted userId here
+      userId
     });
 
     await newUpload.save();
