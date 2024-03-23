@@ -8,6 +8,7 @@ const session = require('express-session');
 const passport = require('./Utils/passport');
 const authRoutes = require('./Routes/auth.Route');
 const userRoutes = require('./Routes/user.Route');
+const uploadRoutes = require('./Routes/uploadRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -49,6 +50,7 @@ passport(app);
 // Use authentication routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // Set up Socket.io connection
 const server = http.createServer(app);
