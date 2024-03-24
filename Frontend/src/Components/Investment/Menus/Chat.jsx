@@ -10,6 +10,9 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:5000"); // Connect to your Socket.io server
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -34,6 +37,16 @@ export default function Chat() {
     };
 
     fetchMessages();
+
+    // Listen for incoming messages from the server
+    socket.on("message", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    // Clean up the socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
   }, []); // Empty dependency array to fetch messages only once on component mount
 
   const handleSendMessage = async () => {
@@ -43,8 +56,8 @@ export default function Chat() {
 
     const messageData = {
       content: newMessage,
-      sender: "65fead563078cdddb0119031", // Replace 'YourSenderId' with the actual sender ID
-      recipient: "65fead563078cdddb0119031", // Replace 'RecipientId' with the actual recipient ID
+      sender: "65fead563078cdddb0119031",
+      recipient: "65fead563078cdddb0119031",
     };
 
     try {
@@ -57,14 +70,13 @@ export default function Chat() {
       });
 
       if (response.ok) {
-        // Add the sent message to the list immediately
+        // Update messages state with the new message immediately after sending
         const newMessageObj = {
-          id: messages.length + 1,
           content: newMessage,
           sender: "You",
         };
-        setMessages([...messages, newMessageObj]);
-        setNewMessage("");
+        setMessages((prevMessages) => [...prevMessages, newMessageObj]);
+        setNewMessage(""); // Clear the input field after sending
       } else {
         console.error("Failed to send message:", response.statusText);
       }
@@ -82,12 +94,11 @@ export default function Chat() {
               Chat
             </Typography>
             <List style={{ maxHeight: 300, overflow: "auto" }}>
-              {messages.map((message) => (
-                <ListItem key={message.id}>
+              {messages.map((message, index) => (
+                <ListItem key={index}>
                   <ListItemText
-                    primary={message.content} // Display only the message content
+                    primary={message.content}
                     secondary={message.sender === "You" ? "You" : message.sender}
-                    // Show sender as secondary text, except for your own messages
                     primaryTypographyProps={{
                       fontWeight: message.sender === "You" ? "bold" : "normal",
                     }}

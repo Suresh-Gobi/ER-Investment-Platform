@@ -54,6 +54,11 @@ io.on("connection", (socket) => {
 
   // Initialize io object in messageController
   messageController.init(io);
+
+  // Socket event for receiving new messages
+  socket.on("newMessage", (message) => {
+    io.emit("newMessage", message); // Broadcast the new message to all clients
+  });
 });
 
 // Start the server
