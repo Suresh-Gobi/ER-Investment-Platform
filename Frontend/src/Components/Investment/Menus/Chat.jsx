@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -12,12 +12,29 @@ import {
 } from "@mui/material";
 
 export default function Chat() {
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hello!", sender: "John" },
-    { id: 2, text: "Hi there!", sender: "Alice" },
-    // Add more sample messages as needed
-  ]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
+  useEffect(() => {
+    // Fetch messages when component mounts
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/messages?recipient=65fead563078cdddb0119031"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setMessages(data);
+        } else {
+          console.error("Failed to fetch messages:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchMessages();
+  }, []); // Empty dependency array to fetch messages only once on component mount
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") {
@@ -40,10 +57,11 @@ export default function Chat() {
       });
 
       if (response.ok) {
+        // Add the sent message to the list immediately
         const newMessageObj = {
           id: messages.length + 1,
-          text: newMessage,
-          sender: "You", // You can replace 'You' with the actual sender's name or ID
+          content: newMessage,
+          sender: "You",
         };
         setMessages([...messages, newMessageObj]);
         setNewMessage("");
@@ -67,8 +85,9 @@ export default function Chat() {
               {messages.map((message) => (
                 <ListItem key={message.id}>
                   <ListItemText
-                    primary={message.sender}
-                    secondary={message.text}
+                    primary={message.content} // Display only the message content
+                    secondary={message.sender === "You" ? "You" : message.sender}
+                    // Show sender as secondary text, except for your own messages
                     primaryTypographyProps={{
                       fontWeight: message.sender === "You" ? "bold" : "normal",
                     }}

@@ -31,9 +31,20 @@ function handleMessage(data) {
         console.error('Error saving message:', err);
       });
   }
+
+  async function getMessages(criteria = {}) {
+    try {
+      const messages = await Message.find(criteria).exec();
+      return messages;
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+      return [];
+    }
+  }
   
 
 module.exports = {
   init,
-  handleMessage
+  handleMessage,
+  getMessages
 };
