@@ -31,6 +31,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the
 import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
 import Profile from "./Menus/Profile";
+import Chat from "./Menus/Chat";
 
 const drawerWidth = 240;
 
@@ -191,6 +192,7 @@ export default function MiniDrawer() {
         {selectedItem === "Overview" && <Overview />}
         {selectedItem === "Projects" && <Projects />}
         {selectedItem === "Profile" && <Profile />}
+        {selectedItem === "Chat" && <Chat />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>
