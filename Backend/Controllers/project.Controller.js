@@ -1,5 +1,5 @@
 const multer = require("multer");
-const Upload = require("../Models/upload");
+const Project = require("../Models/Project.Model"); // Assuming correct import path for Project model
 const cloudinary = require("cloudinary").v2;
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
@@ -37,45 +37,31 @@ const uploadDocument = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path);
 
     const {
-      name,
-      email,
-      address,
-      phoneNumber,
-      nic,
-      dob,
-      nationality,
-      bankName,
-      accountNumber,
-      branch,
-      bankCode,
-      swiftCode,
-      verifiedAccount,
+      projectTitle,
+      projectCategory,
+      projectDescription,
+      projectTimeline,
+      plant,
+      searchTag,
     } = req.body;
     const documentUrl = result.secure_url;
 
-    const newUpload = new Upload({
-      name,
-      email,
-      address,
-      phoneNumber,
-      nic,
-      dob,
-      nationality,
-      bankName,
-      accountNumber,
-      branch,
-      bankCode,
-      swiftCode,
-      verifiedAccount: false,
+    const newProject = new Project({
+      projectTitle,
+      projectCategory,
+      projectDescription,
+      projectTimeline,
+      plant,
+      searchTag,
       documentUrl,
-      userId,
+      user: userId, // Assuming userId is the correct field to reference the user
     });
 
-    await newUpload.save();
+    await newProject.save();
 
     return res
       .status(201)
-      .json({ message: "File uploaded successfully", upload: newUpload });
+      .json({ message: "Project created successfully", project: newProject });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });

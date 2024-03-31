@@ -8,9 +8,10 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('./Utils/passport');
 const authRoutes = require('./Routes/auth.Route');
-const uploadRoutes = require('./Routes/uploadRoutes');
+// const uploadRoutes = require('./Routes/uploadRoutes');
 const messageRoutes = require('./Routes/message.Route');
 const messageController = require('./Controllers/message.Controller');
+const projectRoute = require('./Routes/project.Route');
 require('dotenv').config();
 
 const app = express();
@@ -41,8 +42,9 @@ passport(app);
 
 // Use authentication routes
 app.use('/auth', authRoutes);
-app.use('/api/uploads', uploadRoutes);
+// app.use('/api/uploads', uploadRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/project', projectRoute);
 
 // Set up Socket.io connection
 io.on("connection", (socket) => {
