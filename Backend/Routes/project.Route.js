@@ -1,8 +1,22 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { upload, uploadDocument } = require('../Controllers/project.Controller');
+const { createProject } = require("../Controllers/project.Controller");
+const multer = require("multer");
 
-// POST route for uploading a document
-router.post('/create', upload.single('uploadFile'), uploadDocument); // Update field name here
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+// Multer upload middleware using the storage configuration
+const upload = multer({ storage: storage });
+
+// Route to handle project creation with file upload
+router.post("/projects", upload.single("projectDocument"), createProject);
 
 module.exports = router;

@@ -5,19 +5,13 @@ const projectSchema = new mongoose.Schema({
   projectCategory: String,
   projectDescription: String,
   projectTimeline: String,
-  plant: String,
-  searchTag: String,
-  documentUrl: String,
+  plantsToPlant: String,
+  searchTags: String,
+  projectDocument : String,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
 });
 
-const Project = mongoose.model("Project", projectSchema);
-
-module.exports = Project;
+module.exports = mongoose.model("Project", projectSchema);
