@@ -12,6 +12,8 @@ const authRoutes = require('./Routes/auth.Route');
 const messageRoutes = require('./Routes/message.Route');
 const messageController = require('./Controllers/message.Controller');
 const projectRoute = require('./Routes/project.Route');
+const offerRoute = require('./Routes/offer.Route');
+
 require('dotenv').config();
 
 const app = express();
@@ -45,6 +47,7 @@ app.use('/auth', authRoutes);
 // app.use('/api/uploads', uploadRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/project', projectRoute);
+app.use('/api/offers', offerRoute);
 
 // Set up Socket.io connection
 io.on("connection", (socket) => {
