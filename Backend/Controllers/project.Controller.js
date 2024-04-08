@@ -43,4 +43,18 @@ const createProject = async (req, res) => {
   }
 };
 
-module.exports = { createProject };
+const getProjects = async (req, res) => {
+  try {
+    // Use Mongoose's find method to get all projects
+    const projects = await Project.find();
+
+    // Send the projects as a JSON response
+    res.status(200).json({ projects });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+module.exports = { createProject, getProjects };

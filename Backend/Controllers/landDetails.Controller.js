@@ -1,4 +1,4 @@
-const Offer = require("../models/Offer");
+const Land = require("../Models/LandDetails");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -21,7 +21,7 @@ const createLand = async (req, res) => {
     const landDocResult = await cloudinary.uploader.upload(req.files.landDocumentation.path);
 
     // Create new offer with Cloudinary URLs for landImage and landDocumentation
-    const newOffer = new Offer({
+    const newLand = new Land({
       landDetails: {
         landLocation,
         landArea,
@@ -33,7 +33,7 @@ const createLand = async (req, res) => {
       userId,
     });
 
-    await newOffer.save();
+    await newLand.save();
 
     res.status(201).json({ message: "Offer created successfully", offer: newOffer });
   } catch (error) {

@@ -7,6 +7,6 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
 // POST request to create a new offer
-router.post("/offerscreate", upload.fields([{ name: "landImage", maxCount: 1 }, { name: "landDocumentation", maxCount: 1 }]), createLandController.createLand);
+router.post("/landcreate", upload.fields([{ name: "landImage", maxCount: 1 }, { name: "landDocumentation", maxCount: 1 }]), createLandController.createLand);
 
 module.exports = router;

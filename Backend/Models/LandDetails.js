@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const offerSchema = new mongoose.Schema({
+const landSchema = new mongoose.Schema({
   landDetails: {
     landLocation: {
       type: {
@@ -32,6 +32,6 @@ const offerSchema = new mongoose.Schema({
   },
 });
 
-const Offer = mongoose.model("Offer", offerSchema);
+const Land = mongoose.model("Land", landSchema);
 
-module.exports = Offer;
+module.exports = Land;
