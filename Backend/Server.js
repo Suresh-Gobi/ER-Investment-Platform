@@ -14,6 +14,7 @@ const messageController = require('./Controllers/message.Controller');
 const projectRoute = require('./Routes/project.Route');
 const offerRoute = require('./Routes/offer.Route');
 const landRoute = require('./Routes/landDetails.Route');
+const paymentRoute = require('./Routes//payment.Route');
 
 require('dotenv').config();
 
@@ -50,6 +51,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/project', projectRoute);
 app.use('/api/offers', offerRoute);
 app.use('/api/lands', landRoute);
+app.use('/api/payments', paymentRoute);
 
 // Set up Socket.io connection
 io.on("connection", (socket) => {
