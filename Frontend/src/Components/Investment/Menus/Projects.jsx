@@ -37,6 +37,11 @@ export default function Projects() {
     initialInvestment: "",
     estimatedTotalExpensive: "",
     expectedRevenue: "",
+    landLocation: "",
+    landArea: "",
+    landDocumentation: null,
+    userId: "65fead563078cdddb0119031", // Reset userId field
+    reference: "", // Reset reference field
   });
 
   const handleOpen = () => {
@@ -58,6 +63,11 @@ export default function Projects() {
       initialInvestment: "",
       estimatedTotalExpensive: "",
       expectedRevenue: "",
+      landLocation: "",
+      landArea: "",
+      landDocumentation: null,
+      userId: "65fead563078cdddb0119031", // Reset userId field
+      reference: "", // Reset reference field
     });
   };
 
@@ -123,14 +133,36 @@ export default function Projects() {
     }
   };
 
+  const handleCreateLand = async () => {
+    try {
+      const landData = new FormData();
+      landData.append("landLocation", formData.landLocation);
+      landData.append("landArea", formData.landArea);
+      landData.append("landDocumentation", formData.landDocumentation);
+      landData.append("userId", formData.userId); // Add userId to FormData
+      landData.append("reference", formData.reference); // Add reference to FormData
+
+      const response = await axios.post(
+        "http://localhost:5000/api/lands/landcreate",
+        landData
+      );
+
+      console.log("Land created successfully:", response.data);
+
+      handleClose(); // Close the dialog after land creation
+    } catch (error) {
+      console.error("Error creating land details:", error);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    // If the input is a file input (projectDocument), set formData differently
-    if (name === "projectDocument") {
+    // If the input is a file input (projectDocument or landDocument), set formData differently
+    if (name === "projectDocument" || name === "landDocumentation") {
       setFormData((prevData) => ({
         ...prevData,
-        projectDocument: files[0], // Set projectDocument to the selected file
+        [name]: files[0], // Set projectDocument or landDocument to the selected file
       }));
     } else {
       setFormData((prevData) => ({
@@ -297,16 +329,16 @@ export default function Projects() {
                     margin="normal"
                   />
                   <TextField
-                    label="Land Documentation"
-                    name="landDocumentation"
-                    value={formData.landDocumentation}
+                    label="Reference"
+                    name="reference"
+                    value={formData.reference}
                     onChange={handleChange}
                     fullWidth
                     margin="normal"
                   />
                   <input
                     type="file"
-                    name="file"
+                    name="landDocumentation"
                     onChange={handleChange}
                     style={{ marginTop: "16px" }}
                   />
@@ -336,6 +368,16 @@ export default function Projects() {
             }
           >
             {activeStep === steps.length - 1 ? "Create Project" : "Next"}
+          </Button>
+          <Button disabled={activeStep === 0} onClick={handleBack}>
+            Back
+          </Button>
+          <Button
+            onClick={
+              activeStep === steps.length - 1 ? handleCreateLand : handleNext
+            }
+          >
+            {activeStep === steps.length - 1 ? "Create Land" : "Next"}
           </Button>
         </DialogActions>
       </Dialog>
