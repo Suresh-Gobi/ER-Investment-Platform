@@ -33,6 +33,10 @@ export default function Projects() {
     plantsToPlant: "",
     searchTags: "",
     projectDocument: null, // Add projectDocument field
+    investRange: "",
+    initialInvestment: "",
+    estimatedTotalExpensive: "",
+    expectedRevenue: "",
   });
 
   const handleOpen = () => {
@@ -50,6 +54,10 @@ export default function Projects() {
       plantsToPlant: "",
       searchTags: "",
       projectDocument: null, // Reset projectDocument field
+      investRange: "",
+      initialInvestment: "",
+      estimatedTotalExpensive: "",
+      expectedRevenue: "",
     });
   };
 
@@ -72,13 +80,46 @@ export default function Projects() {
       formDataToSend.append("searchTags", formData.searchTags);
       formDataToSend.append("projectDocument", formData.projectDocument); // Append projectDocument to FormData
 
-      const response = await axios.post("http://localhost:5000/api/project/projects", formDataToSend);
+      const response = await axios.post(
+        "http://localhost:5000/api/project/projects",
+        formDataToSend
+      );
 
       console.log("Project created successfully:", response.data);
 
       handleClose();
     } catch (error) {
       console.error("Error creating project:", error);
+    }
+  };
+
+  const handleCreateOffer = async () => {
+    try {
+      const {
+        investRange,
+        initialInvestment,
+        estimatedTotalExpensive,
+        expectedRevenue,
+      } = formData;
+
+      const offerData = {
+        InvestmentRange: investRange,
+        InitialInvestment: initialInvestment,
+        EstimatedTotal: estimatedTotalExpensive,
+        ExpectedRevenue: expectedRevenue,
+        userId: "65fead563078cdddb0119031",
+      };
+
+      const response = await axios.post(
+        "http://localhost:5000/api/offers/offercreate",
+        offerData
+      );
+
+      console.log("Offer created successfully:", response.data);
+
+      handleClose();
+    } catch (error) {
+      console.error("Error creating offer:", error);
     }
   };
 
@@ -243,11 +284,24 @@ export default function Projects() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
+          <Button
+            onClick={
+              activeStep === steps.length - 1
+                ? handleCreateOffer
+                : () => handleNext()
+            }
+          >
+            {activeStep === steps.length - 1 ? "Create Offer" : "Next"}
+          </Button>
           <Button disabled={activeStep === 0} onClick={handleBack}>
             Back
           </Button>
-          <Button onClick={activeStep === steps.length - 1 ? handleCreateProject : handleNext}>
-            {activeStep === steps.length - 1 ? "Create" : "Next"}
+          <Button
+            onClick={
+              activeStep === steps.length - 1 ? handleCreateProject : handleNext
+            }
+          >
+            {activeStep === steps.length - 1 ? "Create Project" : "Next"}
           </Button>
         </DialogActions>
       </Dialog>
