@@ -278,6 +278,40 @@ export default function Projects() {
                   />
                 </form>
               )}
+              {activeStep === 2 && (
+                <form>
+                  <TextField
+                    label="Land Location (Latitude, Longitude)"
+                    name="landLocation"
+                    value={formData.landLocation}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Land Area"
+                    name="landArea"
+                    value={formData.landArea}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Land Documentation"
+                    name="landDocumentation"
+                    value={formData.landDocumentation}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <input
+                    type="file"
+                    name="file"
+                    onChange={handleChange}
+                    style={{ marginTop: "16px" }}
+                  />
+                </form>
+              )}
               {getStepContent(activeStep)}
             </div>
           </DialogContentText>
@@ -323,7 +357,14 @@ function getStepContent(step) {
         </div>
       );
     case 2:
-      return "Step 3 content";
+      return (
+        <div>
+          <Typography variant="h6" gutterBottom>
+            Step 3 content
+          </Typography>
+          {/* Your step 2 form */}
+        </div>
+      );
     default:
       return "Unknown step";
   }
