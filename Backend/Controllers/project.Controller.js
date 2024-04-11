@@ -1,4 +1,6 @@
+const jwt = require("jsonwebtoken");
 const Project = require("../Models/Project.Model");
+const User = require("../Models/User.Model");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -36,7 +38,9 @@ const createProject = async (req, res) => {
 
     await newProject.save();
 
-    res.status(201).json({ message: "Project created successfully", project: newProject });
+    res
+      .status(201)
+      .json({ message: "Project created successfully", project: newProject });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -45,8 +49,15 @@ const createProject = async (req, res) => {
 
 const getProjects = async (req, res) => {
   try {
-    // Use Mongoose's find method to get all projects
-    const projects = await Project.find();
+    // Get the token from the request headers
+    const token = req.headers.authorization.split(" ")[1];
+
+    // Verify and decode the token to get the user ID
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId;
+
+    // Find projects based on the user's ID from the decoded token
+    const projects = await Project.find({ userId });
 
     // Send the projects as a JSON response
     res.status(200).json({ projects });
@@ -55,6 +66,5 @@ const getProjects = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 module.exports = { createProject, getProjects };

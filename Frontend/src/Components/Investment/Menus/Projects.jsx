@@ -18,6 +18,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import MyProjects from "./ProjectDetails/myProject";
 
 // Define project categories
 const projectCategories = ["Reforestation", "Agriculture", "Plantation"];
@@ -182,6 +183,7 @@ export default function Projects() {
           <AddIcon />
         </CardContent>
       </Card>
+      <MyProjects/>
       <Dialog open={open} onClose={handleClose} fullScreen>
         <DialogTitle>Create New Project</DialogTitle>
         <DialogContent>
