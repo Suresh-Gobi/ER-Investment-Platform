@@ -10,6 +10,9 @@ import Signup from "./Pages/Signup/Signup";
 import Login from "./Pages/Login/Login";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 
+//test
+import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -21,6 +24,7 @@ function App() {
         <Route path="/singup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pro" element={<Project />} />
         </Routes>
       </BrowserRouter>
     </>
