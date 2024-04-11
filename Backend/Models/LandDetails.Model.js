@@ -15,7 +15,6 @@ const landSchema = new mongoose.Schema({
     },
     landArea: String,
     landDocumentation: String,
-    landImage: String,
     approved: {
       type: Boolean,
       default: false,

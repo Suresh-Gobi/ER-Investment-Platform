@@ -1,12 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const createLandController = require("../Controllers/landDetails.Controller");
+const { createLand } = require("../Controllers/landDetails.Controller");
 const multer = require("multer");
 
 // Multer configuration for handling file uploads
-const upload = multer({ dest: "uploads/" });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Specify the destination directory for file uploads
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original file name for uploaded files
+  },
+});
 
-// POST request to create a new offer
-router.post("/landcreate", upload.fields([{ name: "landImage", maxCount: 1 }, { name: "landDocumentation", maxCount: 1 }]), createLandController.createLand);
+const upload = multer({ storage: storage });
+
+// POST request to create a new land record
+router.post("/landcreate", upload.single("landDocumentation"), createLand);
 
 module.exports = router;
