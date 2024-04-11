@@ -187,6 +187,56 @@ export default function Projects() {
                   />
                 </form>
               )}
+              {activeStep === 1 && (
+                <form>
+                  <TextField
+                    select
+                    label="Invest Range"
+                    name="investRange"
+                    value={formData.investRange}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  >
+                    {investRanges.map((range) => (
+                      <MenuItem key={range} value={range}>
+                        {range}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Initial Investment"
+                    name="initialInvestment"
+                    value={formData.initialInvestment}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  >
+                    {initialInvestments.map((investment) => (
+                      <MenuItem key={investment} value={investment}>
+                        {investment}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    label="Estimated Total Expensive"
+                    name="estimatedTotalExpensive"
+                    value={formData.estimatedTotalExpensive}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Expected Revenue"
+                    name="expectedRevenue"
+                    value={formData.expectedRevenue}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                </form>
+              )}
               {getStepContent(activeStep)}
             </div>
           </DialogContentText>
@@ -210,7 +260,14 @@ function getStepContent(step) {
     case 0:
       return null;
     case 1:
-      return "Step 2 content";
+      return (
+        <div>
+          <Typography variant="h6" gutterBottom>
+            Step 2 content
+          </Typography>
+          {/* Your step 2 form */}
+        </div>
+      );
     case 2:
       return "Step 3 content";
     default:
@@ -219,3 +276,5 @@ function getStepContent(step) {
 }
 
 const steps = ["Step 1", "Step 2", "Step 3"];
+const investRanges = ["Low", "Medium", "High"];
+const initialInvestments = ["$50", "$100", "$200", "$300"];
