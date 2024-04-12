@@ -9,9 +9,11 @@ import Home from "./Pages/Home/Home";
 import Signup from "./Pages/Signup/Signup";
 import Login from "./Pages/Login/Login";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import AdminLogin from "./Pages/Login/AdminLogin";
+import AdminDash from "./Pages/Dashboard/AdminDashboard"
 
 //test
-import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
+// import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,8 +25,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/singup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/pro" element={<Project />} />
+        <Route path="/admindashboard" element={<AdminDash />} />
         </Routes>
       </BrowserRouter>
     </>
