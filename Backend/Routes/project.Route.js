@@ -4,6 +4,7 @@ const {
   createProject,
   getProjects,
   getAllProjects,
+  updateApprovalStatus,
 } = require("../Controllers/project.Controller");
 const multer = require("multer");
 
@@ -24,5 +25,6 @@ const upload = multer({ storage: storage });
 router.post("/projects", upload.single("projectDocument"), createProject);
 router.get("/projectget", getProjects);
 router.get("/projectadminget", getAllProjects);
+router.put("/projects/:projectId/approval", updateApprovalStatus);
 
 module.exports = router;

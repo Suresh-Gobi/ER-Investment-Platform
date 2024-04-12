@@ -101,4 +101,36 @@ const getAllProjects = async (req, res) => {
   }
 };
 
-module.exports = { createProject, getProjects, getAllProjects };
+const updateApprovalStatus = async (req, res) => {
+  try {
+    // Extract project ID and new approval status from request body
+    const { projectId, approved } = req.body;
+
+    // Validate project ID and approval status
+    if (!projectId || typeof approved !== 'boolean') {
+      return res.status(400).json({ message: 'Invalid request data' });
+    }
+
+    // Find the project by ID and update the "approved" field
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { 'landDetails.approved': approved },
+      { new: true }
+    );
+
+    // Check if the project was found and updated successfully
+    if (!updatedProject) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Send the updated project as the response
+    res.json({ message: 'Approval status updated', project: updatedProject });
+  } catch (error) {
+    // Handle any errors that occur during the update process
+    console.error('Error updating approval status:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+module.exports = { createProject, getProjects, getAllProjects, updateApprovalStatus };
