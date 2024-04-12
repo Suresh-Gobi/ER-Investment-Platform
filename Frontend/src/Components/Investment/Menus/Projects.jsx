@@ -1,419 +1,222 @@
-// Import necessary components from MUI and React
-import React, { useState } from "react";
-import axios from "axios";
-import {
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stepper,
-  Step,
-  StepLabel,
-  TextField,
-  Typography,
-  MenuItem,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import MyProjects from "./ProjectDetails/myProject";
-
-// Define project categories
-const projectCategories = ["Reforestation", "Agriculture", "Plantation"];
+import React, { useState } from 'react';
+import axios from 'axios';
 
 export default function Projects() {
-  const [open, setOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState({
-    projectTitle: "",
-    projectCategory: "",
-    projectDescription: "",
-    projectTimeline: "",
-    plantsToPlant: "",
-    searchTags: "",
-    projectDocument: null, // Add projectDocument field
-    investRange: "",
-    initialInvestment: "",
-    estimatedTotalExpensive: "",
-    expectedRevenue: "",
-    landLocation: "",
-    landArea: "",
-    landDocumentation: null,
-    userId: "65fead563078cdddb0119031", // Reset userId field
-    reference: "", // Reset reference field
+  const [projectData, setProjectData] = useState({
+    projectTitle: '',
+    projectCategory: '',
+    projectDescription: '',
+    projectTimeline: '',
+    plantsToPlant: '',
+    searchTags: '',
+    InvestmentRange: '',
+    InitialInvestment: '',
+    EstimatedTotal: '',
+    ExpectedRevenue: '',
+    landLocation: '',
+    landArea: '',
+    projectDocument: '', // Assuming file upload for project document
+    reference: '',
   });
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setActiveStep(0);
-    setFormData({
-      projectTitle: "",
-      projectCategory: "",
-      projectDescription: "",
-      projectTimeline: "",
-      plantsToPlant: "",
-      searchTags: "",
-      projectDocument: null, // Reset projectDocument field
-      investRange: "",
-      initialInvestment: "",
-      estimatedTotalExpensive: "",
-      expectedRevenue: "",
-      landLocation: "",
-      landArea: "",
-      landDocumentation: null,
-      userId: "65fead563078cdddb0119031", // Reset userId field
-      reference: "", // Reset reference field
-    });
-  };
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleCreateProject = async () => {
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("projectTitle", formData.projectTitle);
-      formDataToSend.append("projectCategory", formData.projectCategory);
-      formDataToSend.append("projectDescription", formData.projectDescription);
-      formDataToSend.append("projectTimeline", formData.projectTimeline);
-      formDataToSend.append("plantsToPlant", formData.plantsToPlant);
-      formDataToSend.append("searchTags", formData.searchTags);
-      formDataToSend.append("projectDocument", formData.projectDocument); // Append projectDocument to FormData
-
-      const response = await axios.post(
-        "http://localhost:5000/api/project/projects",
-        formDataToSend
-      );
-
-      console.log("Project created successfully:", response.data);
-
-      handleClose();
-    } catch (error) {
-      console.error("Error creating project:", error);
-    }
-  };
-
-  const handleCreateOffer = async () => {
-    try {
-      const {
-        investRange,
-        initialInvestment,
-        estimatedTotalExpensive,
-        expectedRevenue,
-      } = formData;
-
-      const offerData = {
-        InvestmentRange: investRange,
-        InitialInvestment: initialInvestment,
-        EstimatedTotal: estimatedTotalExpensive,
-        ExpectedRevenue: expectedRevenue,
-        userId: "65fead563078cdddb0119031",
-      };
-
-      const response = await axios.post(
-        "http://localhost:5000/api/offers/offercreate",
-        offerData
-      );
-
-      console.log("Offer created successfully:", response.data);
-
-      handleClose();
-    } catch (error) {
-      console.error("Error creating offer:", error);
-    }
-  };
-
-  const handleCreateLand = async () => {
-    try {
-      const landData = new FormData();
-      landData.append("landLocation", formData.landLocation);
-      landData.append("landArea", formData.landArea);
-      landData.append("landDocumentation", formData.landDocumentation);
-      landData.append("userId", formData.userId); // Add userId to FormData
-      landData.append("reference", formData.reference); // Add reference to FormData
-
-      const response = await axios.post(
-        "http://localhost:5000/api/lands/landcreate",
-        landData
-      );
-
-      console.log("Land created successfully:", response.data);
-
-      handleClose(); // Close the dialog after land creation
-    } catch (error) {
-      console.error("Error creating land details:", error);
-    }
-  };
-
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
+    setProjectData({ ...projectData, [name]: value });
+  };
 
-    // If the input is a file input (projectDocument or landDocument), set formData differently
-    if (name === "projectDocument" || name === "landDocumentation") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0], // Set projectDocument or landDocument to the selected file
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setProjectData({ ...projectData, projectDocument: file });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token'); // Retrieve token from localStorage
+      if (!token) {
+        // Handle case where token is not found in localStorage
+        console.error('Token not found in localStorage');
+        return;
+      }
+
+      const formData = new FormData();
+      for (let key in projectData) {
+        formData.append(key, projectData[key]);
+      }
+
+      const response = await axios.post('http://localhost:5000/api/project/projects', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token in the request headers
+        },
+      });
+      console.log(response.data);
+      // Add code to handle success response (e.g., display success message)
+    } catch (error) {
+      console.error(error);
+      // Add code to handle error response (e.g., display error message)
     }
   };
 
   return (
     <div>
-      <Card sx={{ maxWidth: 400, margin: "20px", marginTop: "20px" }}>
-        <CardContent onClick={handleOpen} style={{ cursor: "pointer" }}>
-          <Typography variant="h5" component="div">
-            Create New Project
-          </Typography>
-          <AddIcon />
-        </CardContent>
-      </Card>
-      <MyProjects/>
-      <Dialog open={open} onClose={handleClose} fullScreen>
-        <DialogTitle>Create New Project</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <Stepper activeStep={activeStep} alternativeLabel>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <div>
-              {activeStep === 0 && (
-                <form encType="multipart/form-data">
-                  <TextField
-                    label="Project Title"
-                    name="projectTitle"
-                    value={formData.projectTitle}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    select
-                    label="Project Category"
-                    name="projectCategory"
-                    value={formData.projectCategory}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  >
-                    {projectCategories.map((category) => (
-                      <MenuItem key={category} value={category}>
-                        {category}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
-                    label="Project Description"
-                    name="projectDescription"
-                    value={formData.projectDescription}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    type="date"
-                    label="Project Timeline"
-                    name="projectTimeline"
-                    value={formData.projectTimeline}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Plants to Plant"
-                    name="plantsToPlant"
-                    value={formData.plantsToPlant}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Search Tags"
-                    name="searchTags"
-                    value={formData.searchTags}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <input
-                    type="file"
-                    name="projectDocument"
-                    onChange={handleChange}
-                    style={{ marginTop: "16px" }}
-                  />
-                </form>
-              )}
-              {activeStep === 1 && (
-                <form>
-                  <TextField
-                    select
-                    label="Invest Range"
-                    name="investRange"
-                    value={formData.investRange}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  >
-                    {investRanges.map((range) => (
-                      <MenuItem key={range} value={range}>
-                        {range}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
-                    select
-                    label="Initial Investment"
-                    name="initialInvestment"
-                    value={formData.initialInvestment}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  >
-                    {initialInvestments.map((investment) => (
-                      <MenuItem key={investment} value={investment}>
-                        {investment}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
-                    label="Estimated Total Expensive"
-                    name="estimatedTotalExpensive"
-                    value={formData.estimatedTotalExpensive}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Expected Revenue"
-                    name="expectedRevenue"
-                    value={formData.expectedRevenue}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                </form>
-              )}
-              {activeStep === 2 && (
-                <form>
-                  <TextField
-                    label="Land Location (Latitude, Longitude)"
-                    name="landLocation"
-                    value={formData.landLocation}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Land Area"
-                    name="landArea"
-                    value={formData.landArea}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label="Reference"
-                    name="reference"
-                    value={formData.reference}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <input
-                    type="file"
-                    name="landDocumentation"
-                    onChange={handleChange}
-                    style={{ marginTop: "16px" }}
-                  />
-                </form>
-              )}
-              {getStepContent(activeStep)}
-            </div>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Button
-            onClick={
-              activeStep === steps.length - 1
-                ? handleCreateOffer
-                : () => handleNext()
-            }
-          >
-            {activeStep === steps.length - 1 ? "Create Offer" : "Next"}
-          </Button>
-          <Button disabled={activeStep === 0} onClick={handleBack}>
-            Back
-          </Button>
-          <Button
-            onClick={
-              activeStep === steps.length - 1 ? handleCreateProject : handleNext
-            }
-          >
-            {activeStep === steps.length - 1 ? "Create Project" : "Next"}
-          </Button>
-          <Button disabled={activeStep === 0} onClick={handleBack}>
-            Back
-          </Button>
-          <Button
-            onClick={
-              activeStep === steps.length - 1 ? handleCreateLand : handleNext
-            }
-          >
-            {activeStep === steps.length - 1 ? "Create Land" : "Next"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <h1>Create Project</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="projectTitle">Project Title:</label>
+          <input
+            type="text"
+            id="projectTitle"
+            name="projectTitle"
+            value={projectData.projectTitle}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="projectCategory">Project Category:</label>
+          <input
+            type="text"
+            id="projectCategory"
+            name="projectCategory"
+            value={projectData.projectCategory}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="projectDescription">Project Description:</label>
+          <textarea
+            id="projectDescription"
+            name="projectDescription"
+            value={projectData.projectDescription}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="projectTimeline">Project Timeline:</label>
+          <input
+            type="text"
+            id="projectTimeline"
+            name="projectTimeline"
+            value={projectData.projectTimeline}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="plantsToPlant">Plants to Plant:</label>
+          <input
+            type="text"
+            id="plantsToPlant"
+            name="plantsToPlant"
+            value={projectData.plantsToPlant}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="searchTags">Search Tags:</label>
+          <input
+            type="text"
+            id="searchTags"
+            name="searchTags"
+            value={projectData.searchTags}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="InvestmentRange">Investment Range:</label>
+          <input
+            type="text"
+            id="InvestmentRange"
+            name="InvestmentRange"
+            value={projectData.InvestmentRange}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="InitialInvestment">Initial Investment:</label>
+          <input
+            type="text"
+            id="InitialInvestment"
+            name="InitialInvestment"
+            value={projectData.InitialInvestment}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="EstimatedTotal">Estimated Total:</label>
+          <input
+            type="text"
+            id="EstimatedTotal"
+            name="EstimatedTotal"
+            value={projectData.EstimatedTotal}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="ExpectedRevenue">Expected Revenue:</label>
+          <input
+            type="text"
+            id="ExpectedRevenue"
+            name="ExpectedRevenue"
+            value={projectData.ExpectedRevenue}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="landLocation">Land Location:</label>
+          <input
+            type="text"
+            id="landLocation"
+            name="landLocation"
+            value={projectData.landLocation}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="landArea">Land Area:</label>
+          <input
+            type="text"
+            id="landArea"
+            name="landArea"
+            value={projectData.landArea}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="projectDocument">Project Document:</label>
+          <input
+            type="file"
+            id="projectDocument"
+            name="projectDocument"
+            onChange={handleFileChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="reference">Reference:</label>
+          <input
+            type="text"
+            id="reference"
+            name="reference"
+            value={projectData.reference}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <button type="submit">Create Project</button>
+        </div>
+      </form>
     </div>
   );
 }
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return null;
-    case 1:
-      return (
-        <div>
-          <Typography variant="h6" gutterBottom>
-            Step 2 content
-          </Typography>
-          {/* Your step 2 form */}
-        </div>
-      );
-    case 2:
-      return (
-        <div>
-          <Typography variant="h6" gutterBottom>
-            Step 3 content
-          </Typography>
-          {/* Your step 2 form */}
-        </div>
-      );
-    default:
-      return "Unknown step";
-  }
-}
-
-const steps = ["Step 1", "Step 2", "Step 3"];
-const investRanges = ["Low", "Medium", "High"];
-const initialInvestments = ["$50", "$100", "$200", "$300"];

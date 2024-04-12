@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
 const Project = require("../Models/Project.Model");
 const User = require("../Models/User.Model");
 const cloudinary = require("cloudinary").v2;
+const jwt = require("jsonwebtoken");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,6 +11,11 @@ cloudinary.config({
 
 const createProject = async (req, res) => {
   try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId; // Extracted userId from the token
+
+    // Destructure relevant fields from req.body
     const {
       projectTitle,
       projectCategory,
@@ -18,13 +23,20 @@ const createProject = async (req, res) => {
       projectTimeline,
       plantsToPlant,
       searchTags,
-      userId,
+      InvestmentRange,
+      InitialInvestment,
+      EstimatedTotal,
+      ExpectedRevenue,
+      landLocation,
+      landArea,
+      projectDocument,
+      reference,
     } = req.body;
 
     // Upload projectDocument to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
 
-    // Create new project with Cloudinary URL
+    // Create new project with Cloudinary URL and extracted userId
     const newProject = new Project({
       projectTitle,
       projectCategory,
@@ -32,20 +44,31 @@ const createProject = async (req, res) => {
       projectTimeline,
       plantsToPlant,
       searchTags,
-      projectDocument: result.secure_url,
-      user: userId,
+      InvestmentRange,
+      InitialInvestment,
+      EstimatedTotal,
+      ExpectedRevenue,
+      landDetails: {
+        landLocation,
+        landArea,
+        projectDocument: result.secure_url,
+        approved: false,
+        reference,
+      },
+      user: userId, // Assign extracted userId to the new project
     });
 
+    // Save the new project to the database
     await newProject.save();
 
-    res
-      .status(201)
-      .json({ message: "Project created successfully", project: newProject });
+    // Send success response
+    res.status(201).json({ message: "Project created successfully", project: newProject });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const getProjects = async (req, res) => {
   try {
@@ -57,7 +80,7 @@ const getProjects = async (req, res) => {
     const userId = decodedToken.userId;
 
     // Find projects based on the user's ID from the decoded token
-    const projects = await Project.find({ userId });
+    const projects = await Project.find({ user: userId });
 
     // Send the projects as a JSON response
     res.status(200).json({ projects });

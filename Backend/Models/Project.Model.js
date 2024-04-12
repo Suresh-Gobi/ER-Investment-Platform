@@ -7,7 +7,22 @@ const projectSchema = new mongoose.Schema({
   projectTimeline: String,
   plantsToPlant: String,
   searchTags: String,
-  projectDocument : String,
+
+  InvestmentRange: String,
+  InitialInvestment: String,
+  EstimatedTotal: String,
+  ExpectedRevenue: String,
+
+  landDetails: {
+    landLocation: String,
+    landArea: String,
+    projectDocument : String,
+    approved: {
+      type: Boolean,
+      default: false,
+    },
+    reference: String,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
