@@ -90,4 +90,15 @@ const getProjects = async (req, res) => {
   }
 };
 
-module.exports = { createProject, getProjects };
+const getAllProjects = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const projects = await Project.find().populate('user', 'username email');
+
+    res.status(200).json({ projects });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch projects' });
+  }
+};
+
+module.exports = { createProject, getProjects, getAllProjects };

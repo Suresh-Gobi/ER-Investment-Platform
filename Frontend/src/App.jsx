@@ -14,6 +14,7 @@ import AdminDash from "./Pages/Dashboard/AdminDashboard"
 
 //test
 // import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
+import Projects from "./Components/Admin/Menus/Projects";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,6 +29,8 @@ function App() {
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admindashboard" element={<AdminDash />} />
+
+        <Route path="/projects" element={<Projects />} />
         </Routes>
       </BrowserRouter>
     </>

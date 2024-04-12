@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   createProject,
   getProjects,
+  getAllProjects,
 } = require("../Controllers/project.Controller");
 const multer = require("multer");
 
@@ -22,5 +23,6 @@ const upload = multer({ storage: storage });
 // Route to handle project creation with file upload
 router.post("/projects", upload.single("projectDocument"), createProject);
 router.get("/projectget", getProjects);
+router.get("/projectadminget", getAllProjects);
 
 module.exports = router;
