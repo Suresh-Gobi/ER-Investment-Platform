@@ -71,4 +71,8 @@ router.post("/user/verifyotp", authController.verifyOTP);
 router.post("/user/login", authController.login);
 // router.post('/account-verification', userController.createAccountVerification);
 
+router.post("/admin/signup", authController.adminSignup);
+
+router.post("/admin/login", authController.adminLogin);
+
 module.exports = router;
