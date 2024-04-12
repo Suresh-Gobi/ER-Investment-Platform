@@ -203,3 +203,51 @@ exports.adminLogin = async (req, res) => {
       res.status(500).json({ message: 'Something went wrong' });
     }
   };
+
+
+  //Investor 
+  exports.loginAsInvestor = async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      // Check if the user exists in the database
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+  
+      // Check if the provided password matches the hashed password in the database
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+  
+      // Check if the user's email is verified
+      if (!user.isVerified) {
+        return res.status(403).json({ message: "Email is not verified" });
+      }
+  
+      // Check if the user is an investor
+      if (user.role !== 'investor') {
+        return res.status(403).json({ message: "You are not authorized to log in as an investor" });
+      }
+  
+      // Generate JWT token with user data
+      const tokenPayload = {
+        id: user._id,
+        displayName: user.displayName,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+      };
+  
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+  
+      res.status(200).json({ token });
+    } catch (error) {
+      console.error("Error in login:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };

@@ -75,4 +75,6 @@ router.post("/admin/signup", authController.adminSignup);
 
 router.post("/admin/login", authController.adminLogin);
 
+router.post("/investor/login", authController.loginAsInvestor);
+
 module.exports = router;

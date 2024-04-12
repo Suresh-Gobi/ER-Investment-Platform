@@ -11,6 +11,7 @@ import Login from "./Pages/Login/Login";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AdminLogin from "./Pages/Login/AdminLogin";
 import AdminDash from "./Pages/Dashboard/AdminDashboard"
+import InvestorDashboard from "./Pages/Dashboard/InvestorDashboard";
 
 //test
 // import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
@@ -29,6 +30,7 @@ function App() {
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admindashboard" element={<AdminDash />} />
+        <Route path="/investordashboard" element={<InvestorDashboard />} />
 
         <Route path="/projects" element={<Projects />} />
         </Routes>
