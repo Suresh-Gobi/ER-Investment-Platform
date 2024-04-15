@@ -16,6 +16,7 @@ import InvestorDashboard from "./Pages/Dashboard/InvestorDashboard";
 //test
 // import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
 import Projects from "./Components/Admin/Menus/Projects";
+import GeoLocationAlaysis from "./Components/Investment/Menus/Analysis/GeoLocationAnalysis";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -33,6 +34,7 @@ function App() {
         <Route path="/investordashboard" element={<InvestorDashboard />} />
 
         <Route path="/projects" element={<Projects />} />
+        <Route path="/geo" element={<GeoLocationAlaysis />} />
         </Routes>
       </BrowserRouter>
     </>
