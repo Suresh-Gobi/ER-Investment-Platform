@@ -148,7 +148,7 @@ const GeoLocationAnalysis = () => {
         <strong>Area:</strong> {areaInSquareMeters} square meters <br />
         <strong>Weather:</strong>{" "}
         {weatherData && weatherData.weather && weatherData.weather.length > 0 ?
-          `${weatherData.weather[0].main}, ${weatherData.main.temp}°C` :
+          `${weatherData.weather[0].main}, ${weatherData.main.temp}°C, Humidity: ${weatherData.main.humidity}%` :
           "No weather data"} <br />
         <strong>Vertices:</strong>
         {polygonVertices.map((vertex, index) => (
@@ -159,11 +159,11 @@ const GeoLocationAnalysis = () => {
         ))}
       </div>
       <div>
-        <strong>Furture Predictions Weather Data:</strong>
+        <strong>Past 3 Years Weather Data:</strong>
         {pastWeatherData.map((item, index) => (
           <div key={index}>
             Date: {new Date(item.dt * 1000).toLocaleDateString()}, Temperature:{" "}
-            {item.main.temp}°C
+            {item.main.temp}°C, Humidity: {item.main.humidity}%
           </div>
         ))}
       </div>
