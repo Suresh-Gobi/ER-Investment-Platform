@@ -14,11 +14,12 @@ const GeoLocationAnalysis = () => {
   const [polygonVertices, setPolygonVertices] = useState([]);
   const [weatherData, setWeatherData] = useState(null);
   const [pastWeatherData, setPastWeatherData] = useState([]);
+  const [currentWeatherData, setCurrentWeatherData] = useState(null); // Added state for current weather
 
   useEffect(() => {
     // Load the Google Maps API script dynamically
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDnOmZ9Nv82BJpiRuNHZlT55cZWjLeBviA&libraries=places,drawing`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDnOmZ9Nv82BJpiRuNHZlT55cZWjLeBviA&libraries=places,drawing`; // Replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key
     script.async = true;
     script.onload = initializeMap;
     document.head.appendChild(script);
@@ -114,7 +115,7 @@ const GeoLocationAnalysis = () => {
   const getWeatherData = async (latitude, longitude) => {
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=7fb9f37723118b83f06276e2f3e96221`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=7fb9f37723118b83f06276e2f3e96221` // Replace YOUR_OPENWEATHERMAP_API_KEY with your actual API key
       );
       setWeatherData(response.data);
       if (response.data && response.data.list) {
@@ -129,6 +130,7 @@ const GeoLocationAnalysis = () => {
           );
         });
         setPastWeatherData(pastYearsData);
+        setCurrentWeatherData(response.data.list[0]); // Set current weather data
       }
     } catch (error) {
       console.error("Error fetching weather data:", error);
@@ -146,6 +148,10 @@ const GeoLocationAnalysis = () => {
         {polygonVertices.length > 0 && polygonVertices[0].longitude} <br />
         <strong>Area Name:</strong> {locationDetails.areaName} <br />
         <strong>Area:</strong> {areaInSquareMeters} square meters <br />
+        <strong>Current Weather:</strong>{" "}
+        {currentWeatherData && currentWeatherData.weather && currentWeatherData.weather.length > 0 ?
+          `${currentWeatherData.weather[0].main}, ${currentWeatherData.main.temp}°C, Humidity: ${currentWeatherData.main.humidity}%` :
+          "No weather data"} <br />
         <strong>Weather:</strong>{" "}
         {weatherData && weatherData.weather && weatherData.weather.length > 0 ?
           `${weatherData.weather[0].main}, ${weatherData.main.temp}°C, Humidity: ${weatherData.main.humidity}%` :
