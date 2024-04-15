@@ -69,7 +69,7 @@ const GeoLocationAnalysis = () => {
       // Get the area name for each vertex
       getAreaNames(vertices);
       // Get weather data for the area
-      getWeatherData(locationDetails.latitude, locationDetails.longitude);
+      getWeatherData(vertices[0].latitude, vertices[0].longitude); // Using the first vertex's coordinates
     });
 
     setMap(newMap);
@@ -101,7 +101,7 @@ const GeoLocationAnalysis = () => {
   const getWeatherData = async (latitude, longitude) => {
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=7fb9f37723118b83f06276e2f3e96221`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=YOUR_OPENWEATHERMAP_API_KEY`
       );
       setWeatherData(response.data);
     } catch (error) {
@@ -113,8 +113,8 @@ const GeoLocationAnalysis = () => {
     <div>
       <div id="map" style={{ width: '100%', height: '400px' }}></div>
       <div>
-        <strong>Latitude:</strong> {locationDetails.latitude} <br />
-        <strong>Longitude:</strong> {locationDetails.longitude} <br />
+        <strong>Latitude:</strong> {polygonVertices.length > 0 && polygonVertices[0].latitude} <br />
+        <strong>Longitude:</strong> {polygonVertices.length > 0 && polygonVertices[0].longitude} <br />
         <strong>Area Name:</strong> {locationDetails.areaName} <br />
         <strong>Area:</strong> {areaInSquareMeters} square meters <br />
         <strong>Weather:</strong> {weatherData ? `${weatherData.weather[0].main}, ${weatherData.main.temp}°C` : 'Loading...'} <br />
