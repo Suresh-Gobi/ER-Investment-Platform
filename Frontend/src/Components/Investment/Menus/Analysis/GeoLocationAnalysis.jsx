@@ -101,13 +101,15 @@ const GeoLocationAnalysis = () => {
   const getWeatherData = async (latitude, longitude) => {
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=YOUR_OPENWEATHERMAP_API_KEY`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=7fb9f37723118b83f06276e2f3e96221`
       );
       setWeatherData(response.data);
     } catch (error) {
       console.error('Error fetching weather data:', error);
+      setWeatherData(null); // Clear weather data if an error occurs
     }
   };
+  
 
   return (
     <div>
