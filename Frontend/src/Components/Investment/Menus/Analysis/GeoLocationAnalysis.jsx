@@ -118,11 +118,15 @@ const GeoLocationAnalysis = () => {
       );
       setWeatherData(response.data);
       if (response.data && response.data.list) {
-        // Filter past three years data
+        // Filter past three years data by month
         const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth();
         const pastYearsData = response.data.list.filter((item) => {
           const itemDate = new Date(item.dt * 1000);
-          return itemDate.getFullYear() >= currentYear - 3;
+          return (
+            itemDate.getFullYear() >= currentYear - 3 &&
+            itemDate.getMonth() <= currentMonth
+          );
         });
         setPastWeatherData(pastYearsData);
       }
@@ -155,7 +159,7 @@ const GeoLocationAnalysis = () => {
         ))}
       </div>
       <div>
-        <strong>Past 3 Years Weather Data:</strong>
+        <strong>Furture Predictions Weather Data:</strong>
         {pastWeatherData.map((item, index) => (
           <div key={index}>
             Date: {new Date(item.dt * 1000).toLocaleDateString()}, Temperature:{" "}
