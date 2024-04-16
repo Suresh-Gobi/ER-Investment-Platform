@@ -12,6 +12,7 @@ const authRoutes = require('./Routes/auth.Route');
 const messageRoutes = require('./Routes/message.Route');
 const messageController = require('./Controllers/message.Controller');
 const projectRoute = require('./Routes/project.Route');
+const plantRoute = require('./Routes/plant.Route');
 
 const paymentRoute = require('./Routes/payment.Route');
 
@@ -23,7 +24,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 // Use CORS middleware with origin configuration (adjust as needed)
-app.use(cors({ origin: ['http://localhost:5173'] })); // Replace with your frontend's origin
+app.use(cors({ origin: ['http://localhost:5173'] }));
 
 // Connect to MongoDB using URI from environment variables
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, })
@@ -50,6 +51,7 @@ app.use('/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/project', projectRoute);
 app.use('/api/payments', paymentRoute);
+app.use('/api/plants', plantRoute);
 
 
 // Set up Socket.io connection
