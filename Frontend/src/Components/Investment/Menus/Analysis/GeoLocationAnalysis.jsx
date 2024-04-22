@@ -169,13 +169,17 @@ const GeoLocationAnalysis = () => {
         <strong>Area Name:</strong> {locationDetails.areaName} <br />
         <strong>Area:</strong> {areaInSquareMeters} square meters <br />
         <strong>Current Weather:</strong>{" "}
-        {currentWeatherData && currentWeatherData.weather && currentWeatherData.weather.length > 0 ?
-          `${currentWeatherData.weather[0].main}, ${currentWeatherData.main.temp}°C, Humidity: ${currentWeatherData.main.humidity}%` :
-          "No weather data"} <br />
+        {currentWeatherData &&
+        currentWeatherData.weather &&
+        currentWeatherData.weather.length > 0
+          ? `${currentWeatherData.weather[0].main}, ${currentWeatherData.main.temp}°C, Humidity: ${currentWeatherData.main.humidity}%`
+          : "No weather data"}{" "}
+        <br />
         <strong>Weather:</strong>{" "}
-        {weatherData && weatherData.weather && weatherData.weather.length > 0 ?
-          `${weatherData.weather[0].main}, ${weatherData.main.temp}°C, Humidity: ${weatherData.main.humidity}%` :
-          "No weather data"} <br />
+        {weatherData && weatherData.weather && weatherData.weather.length > 0
+          ? `${weatherData.weather[0].main}, ${weatherData.main.temp}°C, Humidity: ${weatherData.main.humidity}%`
+          : "No weather data"}{" "}
+        <br />
         <strong>Vertices:</strong>
         {polygonVertices.map((vertex, index) => (
           <div key={index}>
@@ -203,7 +207,35 @@ const GeoLocationAnalysis = () => {
               <br />
               <strong>Description:</strong> {plant.plantDescription}
               <br />
-              {/* Add other plant details as needed */}
+              <strong>Species:</strong> {plant.plantSpecies}
+              <br />
+              <strong>Scientific Name:</strong> {plant.scientificName}
+              <br />
+              <strong>Image:</strong>{" "}
+              <img
+                src={plant.plantImgUrl}
+                alt={plant.plantName}
+                style={{ maxWidth: "200px" }}
+              />
+              <br />
+              <strong>Temperature Range:</strong> {plant.temperatureRange.min}°C
+              - {plant.temperatureRange.max}°C
+              <br />
+              <strong>Humidity Range:</strong> {plant.humidityRange.min}% -{" "}
+              {plant.humidityRange.max}%
+              <br />
+              <strong>Suitable Locations:</strong> {plant.suitableLocations}
+              <br />
+              <strong>Growing Time Limit:</strong> {plant.growingTimeLimit} days
+              <br />
+              <strong>Plants Per Square Meter:</strong>{" "}
+              {plant.plantsPerSquareMeter}
+              <br />
+              <strong>Market Rate Per Kg:</strong> ${plant.marketRatePerKg}
+              <br />
+              <strong>Investment Per Square Meter:</strong> $
+              {plant.investmentPerSquareMeter}
+              <br />
             </li>
           ))}
         </ul>
