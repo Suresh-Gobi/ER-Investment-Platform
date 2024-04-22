@@ -14,7 +14,8 @@ const GeoLocationAnalysis = () => {
   const [polygonVertices, setPolygonVertices] = useState([]);
   const [weatherData, setWeatherData] = useState(null);
   const [pastWeatherData, setPastWeatherData] = useState([]);
-  const [currentWeatherData, setCurrentWeatherData] = useState(null); // Added state for current weather
+  const [currentWeatherData, setCurrentWeatherData] = useState(null);
+  const [plants, setPlants] = useState([]);
 
   useEffect(() => {
     // Load the Google Maps API script dynamically
@@ -23,6 +24,8 @@ const GeoLocationAnalysis = () => {
     script.async = true;
     script.onload = initializeMap;
     document.head.appendChild(script);
+
+    fetchPlantDetails();
 
     return () => {
       // Clean up function to remove the script when the component unmounts
@@ -138,6 +141,15 @@ const GeoLocationAnalysis = () => {
     }
   };
 
+  const fetchPlantDetails = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/plants/plantget");
+      setPlants(response.data.plants); // Assuming the response contains an array of plant objects
+    } catch (error) {
+      console.error("Error fetching plant details:", error);
+    }
+  };
+
   return (
     <div>
       <div id="map" style={{ width: "100%", height: "400px" }}></div>
@@ -172,6 +184,28 @@ const GeoLocationAnalysis = () => {
             {item.main.temp}°C, Humidity: {item.main.humidity}%
           </div>
         ))}
+      </div>
+
+      <div>
+        <h2>All Plant Details</h2>
+        <ul>
+          {plants.map((plant) => (
+            <li key={plant._id}>
+            <strong>Plant Name:</strong> {plant.plantName}<br />
+            <strong>Description:</strong> {plant.plantDescription}<br />
+            <strong>Species:</strong> {plant.plantSpecies}<br />
+            <strong>Scientific Name:</strong> {plant.scientificName}<br />
+            <strong>Image:</strong> <img src={plant.plantImgUrl} alt={plant.plantName} style={{ maxWidth: "200px" }} /><br />
+            <strong>Temperature Range:</strong> {plant.temperatureRange.min}°C - {plant.temperatureRange.max}°C<br />
+            <strong>Humidity Range:</strong> {plant.humidityRange.min}% - {plant.humidityRange.max}%<br />
+            <strong>Suitable Locations:</strong> {plant.suitableLocations}<br />
+            <strong>Growing Time Limit:</strong> {plant.growingTimeLimit} days<br />
+            <strong>Plants Per Square Meter:</strong> {plant.plantsPerSquareMeter}<br />
+            <strong>Market Rate Per Kg:</strong> ${plant.marketRatePerKg}<br />
+            <strong>Investment Per Square Meter:</strong> ${plant.investmentPerSquareMeter}<br />
+          </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

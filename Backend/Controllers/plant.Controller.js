@@ -50,4 +50,15 @@ const createPlant = async (req, res) => {
   }
 };
 
-module.exports = { createPlant };
+
+const getAllPlants = async (req, res) => {
+  try {
+    const plants = await Plant.find();
+    res.status(200).json({ message: "Plants retrieved successfully", plants });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { createPlant, getAllPlants };

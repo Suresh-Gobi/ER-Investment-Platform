@@ -1,19 +1,10 @@
 const mongoose = require("mongoose");
 
 const plantSchema = new mongoose.Schema({
-  plantName: {
-    type: String,
-    required: true,
-  },
+  plantName: String,
   plantDescription: String,
-  plantSpecies: {
-    type: String,
-    required: true,
-  },
-  scientificName: {
-    type: String,
-    required: true,
-  },
+  plantSpecies: String,
+  scientificName: String,
   plantImgUrl: String,
   temperatureRange: {
     min: {
@@ -35,26 +26,11 @@ const plantSchema = new mongoose.Schema({
       required: true,
     },
   },
-  suitableLocations: {
-    type: [{ lat: Number, long: Number }],
-    required: true,
-  },
-  growingTimeLimit: {
-    type: Number,
-    required: true,
-  },
-  plantsPerSquareMeter: {
-    type: Number,
-    required: true,
-  },
-  marketRatePerKg: {
-    type: Number,
-    required: true,
-  },
-  investmentPerSquareMeter: {
-    type: Number,
-    required: true,
-  },
+  suitableLocations: String,
+  growingTimeLimit:Number,
+  plantsPerSquareMeter: Number,
+  marketRatePerKg: Number,
+  investmentPerSquareMeter: Number,
 });
 
 const Plant = mongoose.model("Plant", plantSchema);
