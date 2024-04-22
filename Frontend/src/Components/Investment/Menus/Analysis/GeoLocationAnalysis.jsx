@@ -20,7 +20,7 @@ const GeoLocationAnalysis = () => {
   useEffect(() => {
     // Load the Google Maps API script dynamically
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDnOmZ9Nv82BJpiRuNHZlT55cZWjLeBviA&libraries=places,drawing`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDnOmZ9Nv82BJpiRuNHZlT55cZWjLeBviA&libraries=places,drawing`; // Replace YOUR_API_KEY with your actual API key
     script.async = true;
     script.onload = initializeMap;
     document.head.appendChild(script);
@@ -158,6 +158,22 @@ const GeoLocationAnalysis = () => {
     }
   };
 
+  // Function to calculate total revenue
+  const calculateTotalRevenue = (plant) => {
+    const growingTimeLimit = plant.growingTimeLimit; // in days
+    const plantsPerSquareMeter = plant.plantsPerSquareMeter;
+    const marketRatePerKg = plant.marketRatePerKg; // $ per kg
+    const investmentPerSquareMeter = plant.investmentPerSquareMeter; // $
+
+    // Calculate total revenue
+    const totalPlants = plantsPerSquareMeter * areaInSquareMeters;
+    const totalRevenue =
+      ( totalPlants * marketRatePerKg) /
+      investmentPerSquareMeter;
+
+    return totalRevenue.toFixed(2); // Round to two decimal places
+  };
+
   return (
     <div>
       <div id="map" style={{ width: "100%", height: "400px" }}></div>
@@ -235,6 +251,8 @@ const GeoLocationAnalysis = () => {
               <br />
               <strong>Investment Per Square Meter:</strong> $
               {plant.investmentPerSquareMeter}
+              <br />
+              <strong>Total Revenue:</strong> ${calculateTotalRevenue(plant)}
               <br />
             </li>
           ))}
