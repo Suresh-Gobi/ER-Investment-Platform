@@ -20,12 +20,10 @@ const GeoLocationAnalysis = () => {
   useEffect(() => {
     // Load the Google Maps API script dynamically
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDnOmZ9Nv82BJpiRuNHZlT55cZWjLeBviA&libraries=places,drawing`; // Replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDnOmZ9Nv82BJpiRuNHZlT55cZWjLeBviA&libraries=places,drawing`;
     script.async = true;
     script.onload = initializeMap;
     document.head.appendChild(script);
-
-    fetchPlantDetails();
 
     return () => {
       // Clean up function to remove the script when the component unmounts
@@ -118,7 +116,7 @@ const GeoLocationAnalysis = () => {
   const getWeatherData = async (latitude, longitude) => {
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=7fb9f37723118b83f06276e2f3e96221` // Replace YOUR_OPENWEATHERMAP_API_KEY with your actual API key
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=7fb9f37723118b83f06276e2f3e96221`
       );
       setWeatherData(response.data);
       if (response.data && response.data.list) {
@@ -134,6 +132,7 @@ const GeoLocationAnalysis = () => {
         });
         setPastWeatherData(pastYearsData);
         setCurrentWeatherData(response.data.list[0]); // Set current weather data
+        filterPlantsByHumidity(response.data.list); // Pass weather data to filter function
       }
     } catch (error) {
       console.error("Error fetching weather data:", error);
@@ -141,12 +140,21 @@ const GeoLocationAnalysis = () => {
     }
   };
 
-  const fetchPlantDetails = async () => {
+  const filterPlantsByHumidity = async (weatherList) => {
     try {
-      const response = await axios.get("http://localhost:5000/api/plants/plantget");
-      setPlants(response.data.plants); // Assuming the response contains an array of plant objects
+      const averageHumidity =
+        weatherList.reduce((sum, item) => sum + item.main.humidity, 0) /
+        weatherList.length;
+
+      const response = await axios.post(
+        "http://localhost:5000/api/plants/filterPlantsByHumidity",
+        { currentHumidity: averageHumidity }
+      );
+
+      setPlants(response.data.filteredPlants); // Update state with filtered plants
     } catch (error) {
-      console.error("Error fetching plant details:", error);
+      console.error("Error filtering plants:", error);
+      setPlants([]); // Clear plants if an error occurs
     }
   };
 
@@ -187,23 +195,16 @@ const GeoLocationAnalysis = () => {
       </div>
 
       <div>
-        <h2>All Plant Details</h2>
+        <h2>Filtered Plant Details</h2>
         <ul>
           {plants.map((plant) => (
             <li key={plant._id}>
-            <strong>Plant Name:</strong> {plant.plantName}<br />
-            <strong>Description:</strong> {plant.plantDescription}<br />
-            <strong>Species:</strong> {plant.plantSpecies}<br />
-            <strong>Scientific Name:</strong> {plant.scientificName}<br />
-            <strong>Image:</strong> <img src={plant.plantImgUrl} alt={plant.plantName} style={{ maxWidth: "200px" }} /><br />
-            <strong>Temperature Range:</strong> {plant.temperatureRange.min}°C - {plant.temperatureRange.max}°C<br />
-            <strong>Humidity Range:</strong> {plant.humidityRange.min}% - {plant.humidityRange.max}%<br />
-            <strong>Suitable Locations:</strong> {plant.suitableLocations}<br />
-            <strong>Growing Time Limit:</strong> {plant.growingTimeLimit} days<br />
-            <strong>Plants Per Square Meter:</strong> {plant.plantsPerSquareMeter}<br />
-            <strong>Market Rate Per Kg:</strong> ${plant.marketRatePerKg}<br />
-            <strong>Investment Per Square Meter:</strong> ${plant.investmentPerSquareMeter}<br />
-          </li>
+              <strong>Plant Name:</strong> {plant.plantName}
+              <br />
+              <strong>Description:</strong> {plant.plantDescription}
+              <br />
+              {/* Add other plant details as needed */}
+            </li>
           ))}
         </ul>
       </div>

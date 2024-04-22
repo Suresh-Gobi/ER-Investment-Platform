@@ -43,13 +43,14 @@ const createPlant = async (req, res) => {
 
     await newPlant.save();
 
-    res.status(201).json({ message: "Plant created successfully", plant: newPlant });
+    res
+      .status(201)
+      .json({ message: "Plant created successfully", plant: newPlant });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 const getAllPlants = async (req, res) => {
   try {
@@ -61,4 +62,25 @@ const getAllPlants = async (req, res) => {
   }
 };
 
-module.exports = { createPlant, getAllPlants };
+const filterPlantsByHumidity = async (req, res) => {
+  try {
+    const { currentHumidity } = req.body; // Assuming the request contains currentHumidity data
+
+    // Fetch plants from the database based on currentHumidity
+    const filteredPlants = await Plant.find({
+      "humidityRange.min": { $lte: currentHumidity },
+      "humidityRange.max": { $gte: currentHumidity },
+    });
+
+    res
+      .status(200)
+      .json({ message: "Plants filtered successfully", filteredPlants });
+  } catch (error) {
+    console.error("Error filtering plants by humidity:", error);
+    res
+      .status(500)
+      .json({ message: "Server error while filtering plants by humidity" });
+  }
+};
+
+module.exports = { createPlant, getAllPlants, filterPlantsByHumidity };
