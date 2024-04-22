@@ -85,6 +85,18 @@ export default function GetPlant() {
     }));
   };
 
+  const handleDeletePlant = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/plants/plantdelete/${selectedPlant._id}`
+      );
+      fetchPlants(); // Refetch the updated plant data after deletion
+      setOpenModal(false); // Close the plant details dialog after deletion
+    } catch (error) {
+      console.error("Error deleting plant:", error);
+    }
+  };
+
   return (
     <div>
       <h2>Plant Details</h2>
@@ -135,6 +147,9 @@ export default function GetPlant() {
               </Typography>
               <Button variant="contained" onClick={handleEditClick}>
                 Edit
+              </Button>
+              <Button variant="contained" color="error" onClick={handleDeletePlant}>
+                Delete
               </Button>
             </DialogContent>
             <DialogActions>
