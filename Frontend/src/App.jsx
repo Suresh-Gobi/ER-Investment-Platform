@@ -18,6 +18,7 @@ import InvestorDashboard from "./Pages/Dashboard/InvestorDashboard";
 import Projects from "./Components/Admin/Menus/Projects";
 import GeoLocationAlaysis from "./Components/Investment/Menus/Analysis/GeoLocationAnalysis";
 import PlantManage from "./Components/Admin/Menus/Plant/PlantManage";
+import GetPlant from "./Components/Admin/Menus/Plant/GetPlant";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -37,6 +38,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/geo" element={<GeoLocationAlaysis />} />
         <Route path="/plant" element={<PlantManage />} />
+        <Route path="/getplant" element={<GetPlant />} />
         </Routes>
       </BrowserRouter>
     </>

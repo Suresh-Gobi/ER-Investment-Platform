@@ -83,4 +83,76 @@ const filterPlantsByHumidity = async (req, res) => {
   }
 };
 
-module.exports = { createPlant, getAllPlants, filterPlantsByHumidity };
+const updatePlant = async (req, res) => {
+  try {
+    const {
+      plantName,
+      plantDescription,
+      plantSpecies,
+      scientificName,
+      temperatureRange,
+      humidityRange,
+      suitableLocations,
+      growingTimeLimit,
+      plantsPerSquareMeter,
+      marketRatePerKg,
+      investmentPerSquareMeter,
+    } = req.body;
+    const plantId = req.params.id; // Assuming the plant ID is passed in the request URL
+
+    // Check if the plant exists
+    const existingPlant = await Plant.findById(plantId);
+    if (!existingPlant) {
+      return res.status(404).json({ message: "Plant not found" });
+    }
+
+    // Update plant details
+    existingPlant.plantName = plantName;
+    existingPlant.plantDescription = plantDescription;
+    existingPlant.plantSpecies = plantSpecies;
+    existingPlant.scientificName = scientificName;
+    existingPlant.temperatureRange = temperatureRange;
+    existingPlant.humidityRange = humidityRange;
+    existingPlant.suitableLocations = suitableLocations;
+    existingPlant.growingTimeLimit = growingTimeLimit;
+    existingPlant.plantsPerSquareMeter = plantsPerSquareMeter;
+    existingPlant.marketRatePerKg = marketRatePerKg;
+    existingPlant.investmentPerSquareMeter = investmentPerSquareMeter;
+
+    // Save the updated plant
+    await existingPlant.save();
+
+    res
+      .status(200)
+      .json({ message: "Plant updated successfully", plant: existingPlant });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const deletePlant = async (req, res) => {
+  try {
+    const plantId = req.params.id; // Assuming the plant ID is passed in the request URL
+
+    // Use findByIdAndDelete to find and delete the plant
+    const deletedPlant = await Plant.findByIdAndDelete(plantId);
+
+    if (!deletedPlant) {
+      return res.status(404).json({ message: "Plant not found" });
+    }
+
+    res.status(200).json({ message: "Plant deleted successfully", plant: deletedPlant });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  createPlant,
+  getAllPlants,
+  filterPlantsByHumidity,
+  updatePlant,
+  deletePlant,
+};
