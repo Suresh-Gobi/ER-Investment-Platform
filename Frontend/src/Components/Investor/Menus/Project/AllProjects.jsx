@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Card, CardContent, Typography, Grid, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Import useHistory from react-router-dom
-import Chat from '../../ChatInvestor'; // Import the Chat component from the appropriate location
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
+import Chat from "../../ChatInvestor"; // Import the Chat component from the appropriate location
 
 export default function AllProjects() {
   const [allProjects, setAllProjects] = useState([]);
@@ -13,11 +23,13 @@ export default function AllProjects() {
   useEffect(() => {
     const fetchAllProjects = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/project/projectadminget');
+        const response = await axios.get(
+          "http://localhost:5000/api/project/projectadminget"
+        );
         const projects = response.data.projects;
         setAllProjects(projects);
       } catch (error) {
-        console.error('Failed to fetch projects:', error.message);
+        console.error("Failed to fetch projects:", error.message);
       }
     };
 
@@ -43,7 +55,7 @@ export default function AllProjects() {
       <h1>All Projects</h1>
       <Grid container spacing={2}>
         {allProjects.length > 0 ? (
-          allProjects.map(project => (
+          allProjects.map((project) => (
             <Grid item xs={12} sm={6} md={4} key={project._id}>
               <Card>
                 <CardContent>
@@ -53,10 +65,17 @@ export default function AllProjects() {
                   <Typography variant="body2" color="textSecondary">
                     {project.projectDescription}
                   </Typography>
-                  <Button variant="outlined" onClick={() => handleViewProject(project)}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleViewProject(project)}
+                  >
                     View
                   </Button>
-                  <Button variant="contained" color="primary" onClick={() => handleChatNow(project)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleChatNow(project)}
+                  >
                     Chat Now with Activist
                   </Button>
                 </CardContent>
@@ -85,9 +104,12 @@ export default function AllProjects() {
               </Typography>
               {/* Include User ID */}
               <Typography variant="body1">
-                User ID: {selectedProject.user ? selectedProject.user._id : 'N/A'}
+                User ID:{" "}
+                {selectedProject.user ? selectedProject.user._id : "N/A"}
               </Typography>
               {/* Add more project details as needed */}
+              {/* Render the Chat component */}
+              {selectedProject && <Chat resId={selectedProject.user._id} />}
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseDialog}>Close</Button>
@@ -95,9 +117,6 @@ export default function AllProjects() {
           </>
         )}
       </Dialog>
-
-      {/* Render the Chat component */}
-      {selectedProject && <Chat resId={selectedProject.user._id} />}
     </div>
   );
 }

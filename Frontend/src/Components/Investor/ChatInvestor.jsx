@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -9,19 +9,19 @@ import {
   List,
   ListItem,
   ListItemText,
-} from '@mui/material';
-import io from 'socket.io-client';
+} from "@mui/material";
+import io from "socket.io-client";
 
-const socket = io('http://localhost:5000'); // Connect to your Socket.io server
+const socket = io("http://localhost:5000"); // Connect to your Socket.io server
 
 export default function Chat({ resId }) {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [userId, setUserId] = useState(''); // State to hold the userId
+  const [newMessage, setNewMessage] = useState("");
+  const [userId, setUserId] = useState(""); // State to hold the userId
 
   useEffect(() => {
     // Fetch userId from localStorage and decode the token
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = decodeToken(token);
       if (decodedToken && decodedToken.id) {
@@ -39,28 +39,31 @@ export default function Chat({ resId }) {
           const data = await response.json();
           setMessages(data);
         } else {
-          console.error('Failed to fetch messages:', response.statusText);
+          console.error("Failed to fetch messages:", response.statusText);
         }
       } catch (error) {
-        console.error('Error fetching messages:', error);
+        console.error("Error fetching messages:", error);
       }
     };
 
     fetchMessages();
 
+    const intervalId = setInterval(fetchMessages, 2000);
+
     // Listen for incoming messages from the server
-    socket.on('message', (message) => {
+    socket.on("message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     // Clean up the socket connection on component unmount
     return () => {
+      clearInterval(intervalId);
       socket.disconnect();
     };
   }, [resId]); // Include resId in the dependency array to fetch messages when resId changes
 
   const handleSendMessage = async () => {
-    if (newMessage.trim() === '') {
+    if (newMessage.trim() === "") {
       return;
     }
 
@@ -71,10 +74,10 @@ export default function Chat({ resId }) {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/messages/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/messages/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(messageData),
       });
@@ -83,15 +86,15 @@ export default function Chat({ resId }) {
         // Update messages state with the new message immediately after sending
         const newMessageObj = {
           content: newMessage,
-          sender: 'You',
+          sender: "You",
         };
         setMessages((prevMessages) => [...prevMessages, newMessageObj]);
-        setNewMessage(''); // Clear the input field after sending
+        setNewMessage(""); // Clear the input field after sending
       } else {
-        console.error('Failed to send message:', response.statusText);
+        console.error("Failed to send message:", response.statusText);
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -99,10 +102,10 @@ export default function Chat({ resId }) {
   const decodeToken = (token) => {
     try {
       // Decode the token
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
       return decodedToken;
     } catch (error) {
-      console.error('Error decoding token:', error);
+      console.error("Error decoding token:", error);
       return null;
     }
   };
@@ -118,16 +121,16 @@ export default function Chat({ resId }) {
             <Typography variant="h4" gutterBottom>
               User ID: {userId}
             </Typography>
-            <List style={{ maxHeight: 300, overflow: 'auto' }}>
+            <List style={{ maxHeight: 300, overflow: "auto" }}>
               {messages.map((message, index) => (
                 <ListItem key={index}>
                   <ListItemText
                     primary={message.content}
                     secondary={
-                      message.sender === userId ? 'You' : message.sender
+                      message.sender === userId ? "You" : message.sender
                     }
                     primaryTypographyProps={{
-                      fontWeight: message.sender === userId ? 'bold' : 'normal',
+                      fontWeight: message.sender === userId ? "bold" : "normal",
                     }}
                   />
                 </ListItem>
