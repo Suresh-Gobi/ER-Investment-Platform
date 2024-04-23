@@ -17,13 +17,23 @@ const socket = io("http://localhost:5000"); // Connect to your Socket.io server
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userId, setUserId] = useState(""); // State to hold the userId
 
   useEffect(() => {
+    // Fetch userId from localStorage and decode the token
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken && decodedToken.id) {
+        setUserId(decodedToken.id);
+      }
+    }
+
     // Fetch messages when component mounts
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/messages?recipient=65fead563078cdddb0119031"
+          `http://localhost:5000/api/messages?recipient=${userId}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -47,7 +57,7 @@ export default function Chat() {
     return () => {
       socket.disconnect();
     };
-  }, []); // Empty dependency array to fetch messages only once on component mount
+  }, [userId]); // Include userId in the dependency array to fetch messages when userId changes
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") {
@@ -56,8 +66,8 @@ export default function Chat() {
 
     const messageData = {
       content: newMessage,
-      sender: "65fead563078cdddb0119031",
-      recipient: "65fead563078cdddb0119031",
+      sender: userId, // Use userId as the sender
+      recipient: userId, // Use userId as the recipient
     };
 
     try {
@@ -85,6 +95,18 @@ export default function Chat() {
     }
   };
 
+  // Function to decode the JWT token
+  const decodeToken = (token) => {
+    try {
+      // Decode the token
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      return decodedToken;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
+
   return (
     <Container>
       <Grid container spacing={3}>
@@ -93,14 +115,17 @@ export default function Chat() {
             <Typography variant="h5" gutterBottom>
               Chat
             </Typography>
+            <Typography variant="h4" gutterBottom>
+              User ID: {userId}
+            </Typography>
             <List style={{ maxHeight: 300, overflow: "auto" }}>
               {messages.map((message, index) => (
                 <ListItem key={index}>
                   <ListItemText
                     primary={message.content}
-                    secondary={message.sender === "You" ? "You" : message.sender}
+                    secondary={message.sender === userId ? "You" : message.sender}
                     primaryTypographyProps={{
-                      fontWeight: message.sender === "You" ? "bold" : "normal",
+                      fontWeight: message.sender === userId ? "bold" : "normal",
                     }}
                   />
                 </ListItem>

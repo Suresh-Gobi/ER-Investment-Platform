@@ -20,6 +20,7 @@ import GeoLocationAlaysis from "./Components/Investment/Menus/Analysis/GeoLocati
 import PlantManage from "./Components/Admin/Menus/Plant/PlantManage";
 import GetPlant from "./Components/Admin/Menus/Plant/GetPlant";
 import AllProjects from "./Components/Investor/Menus/Project/AllProjects";
+import ChatInvestor from "./Components/Investor/ChatInvestor"
 
 function App() {
   const [count, setCount] = useState(0);
@@ -41,6 +42,7 @@ function App() {
         <Route path="/plant" element={<PlantManage />} />
         <Route path="/getplant" element={<GetPlant />} />
         <Route path="/allprojects" element={<AllProjects />} />
+        <Route path="/chat" element={<ChatInvestor />} />
         </Routes>
       </BrowserRouter>
     </>
