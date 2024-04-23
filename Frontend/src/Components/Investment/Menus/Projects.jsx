@@ -15,7 +15,7 @@ export default function Projects() {
     ExpectedRevenue: '',
     landLocation: '',
     landArea: '',
-    projectDocument: '', // Assuming file upload for project document
+    projectDocument: '',
     reference: '',
   });
 

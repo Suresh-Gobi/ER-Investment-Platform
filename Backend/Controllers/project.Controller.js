@@ -80,14 +80,14 @@ const getProjects = async (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
 
     // Verify and decode the token to get the user ID
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedToken = jwt.verify(token, secretKey);
     const userId = decodedToken.userId;
 
     // Find projects based on the user's ID from the decoded token
-    const projects = await Project.find({ user: userId });
+    const projects = await Project.find();
 
     // Send the projects as a JSON response
-    res.status(200).json({ projects });
+    res.status(200).json({ projects, userId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

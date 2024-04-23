@@ -1,11 +1,14 @@
 const Plant = require("../Models/Plant.Model");
 const cloudinary = require("cloudinary").v2;
+const jwt = require("jsonwebtoken");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+const secretKey = 'my-secret-code';
 
 const createPlant = async (req, res) => {
   try {
@@ -54,6 +57,13 @@ const createPlant = async (req, res) => {
 
 const getAllPlants = async (req, res) => {
   try {
+    // Extract the token from the request headers
+    const token = req.headers.authorization.split(" ")[1];
+
+    // Verify and decode the token to get the user ID
+    const decodedToken = jwt.verify(token, secretKey);
+    const userId = decodedToken.userId;
+
     const plants = await Plant.find();
     res.status(200).json({ message: "Plants retrieved successfully", plants });
   } catch (error) {
@@ -142,7 +152,9 @@ const deletePlant = async (req, res) => {
       return res.status(404).json({ message: "Plant not found" });
     }
 
-    res.status(200).json({ message: "Plant deleted successfully", plant: deletedPlant });
+    res
+      .status(200)
+      .json({ message: "Plant deleted successfully", plant: deletedPlant });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
