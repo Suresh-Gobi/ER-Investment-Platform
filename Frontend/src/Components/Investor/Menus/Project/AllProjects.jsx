@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; // Import useHistory from react-router-dom
+import Chat from '../../ChatInvestor'; // Import the Chat component from the appropriate location
 
 export default function AllProjects() {
   const [allProjects, setAllProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate(); // Initialize useHistory
 
   useEffect(() => {
     const fetchAllProjects = async () => {
@@ -30,6 +33,11 @@ export default function AllProjects() {
     setOpenDialog(false);
   };
 
+  const handleChatNow = (project) => {
+    // Navigate to /chat and pass selectedProject.user._id as a query parameter
+    navigate(`/chat/${project.user._id}`);
+  };
+
   return (
     <div>
       <h1>All Projects</h1>
@@ -47,6 +55,9 @@ export default function AllProjects() {
                   </Typography>
                   <Button variant="outlined" onClick={() => handleViewProject(project)}>
                     View
+                  </Button>
+                  <Button variant="contained" color="primary" onClick={() => handleChatNow(project)}>
+                    Chat Now with Activist
                   </Button>
                 </CardContent>
               </Card>
@@ -84,6 +95,9 @@ export default function AllProjects() {
           </>
         )}
       </Dialog>
+
+      {/* Render the Chat component */}
+      {selectedProject && <Chat resId={selectedProject.user._id} />}
     </div>
   );
 }

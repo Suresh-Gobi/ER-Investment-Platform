@@ -42,7 +42,7 @@ function App() {
         <Route path="/plant" element={<PlantManage />} />
         <Route path="/getplant" element={<GetPlant />} />
         <Route path="/allprojects" element={<AllProjects />} />
-        <Route path="/chat" element={<ChatInvestor />} />
+        <Route path="/chat/:Id" element={<ChatInvestor />} />
         </Routes>
       </BrowserRouter>
     </>
