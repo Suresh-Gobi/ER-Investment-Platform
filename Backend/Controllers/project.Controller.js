@@ -9,11 +9,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const secretKey = 'my-secret-code';
+
 const createProject = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decodedToken.userId; // Extracted userId from the token
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, secretKey);
+
+    const userId = decodedToken.id;
 
     // Destructure relevant fields from req.body
     const {
@@ -55,20 +58,21 @@ const createProject = async (req, res) => {
         approved: false,
         reference,
       },
-      user: userId, // Assign extracted userId to the new project
+      user: userId,
     });
 
     // Save the new project to the database
-    await newProject.save();
+    const savedProject = await newProject.save(); // Save the project and capture the result
 
-    // Send success response
-    res.status(201).json({ message: "Project created successfully", project: newProject });
+    // Send success response with the saved project
+    res
+      .status(201)
+      .json({ message: "Project created successfully", project: savedProject });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 const getProjects = async (req, res) => {
   try {
@@ -93,11 +97,11 @@ const getProjects = async (req, res) => {
 const getAllProjects = async (req, res) => {
   try {
     // Fetch all projects from the database
-    const projects = await Project.find().populate('user', 'username email');
+    const projects = await Project.find().populate("user", "username email");
 
     res.status(200).json({ projects });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch projects' });
+    res.status(500).json({ message: "Failed to fetch projects" });
   }
 };
 
@@ -107,30 +111,34 @@ const updateApprovalStatus = async (req, res) => {
     const { projectId, approved } = req.body;
 
     // Validate project ID and approval status
-    if (!projectId || typeof approved !== 'boolean') {
-      return res.status(400).json({ message: 'Invalid request data' });
+    if (!projectId || typeof approved !== "boolean") {
+      return res.status(400).json({ message: "Invalid request data" });
     }
 
     // Find the project by ID and update the "approved" field
     const updatedProject = await Project.findByIdAndUpdate(
       projectId,
-      { 'landDetails.approved': approved },
+      { "landDetails.approved": approved },
       { new: true }
     );
 
     // Check if the project was found and updated successfully
     if (!updatedProject) {
-      return res.status(404).json({ message: 'Project not found' });
+      return res.status(404).json({ message: "Project not found" });
     }
 
     // Send the updated project as the response
-    res.json({ message: 'Approval status updated', project: updatedProject });
+    res.json({ message: "Approval status updated", project: updatedProject });
   } catch (error) {
     // Handle any errors that occur during the update process
-    console.error('Error updating approval status:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error updating approval status:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
-
-module.exports = { createProject, getProjects, getAllProjects, updateApprovalStatus };
+module.exports = {
+  createProject,
+  getProjects,
+  getAllProjects,
+  updateApprovalStatus,
+};
