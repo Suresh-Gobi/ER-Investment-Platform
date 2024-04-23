@@ -102,6 +102,33 @@ export default function AllProjects() {
               <Typography variant="body1">
                 Project Description: {selectedProject.projectDescription}
               </Typography>
+              <Typography variant="body1">
+                Project TimeLine: {selectedProject.projectTimeline}
+              </Typography>
+              <Typography variant="body1">
+                Plant: {selectedProject.plantsToPlant}
+              </Typography>
+              <Typography variant="body1">
+                Investment Range: {selectedProject.InvestmentRange}
+              </Typography>
+              <Typography variant="body1">
+                Estimated Total Cost: {selectedProject.EstimatedTotal}
+              </Typography>
+              <Typography variant="body1">
+                Expected Revenue: {selectedProject.ExpectedRevenue}
+              </Typography>
+              <Typography variant="body1">
+                Land Location: {selectedProject.landDetails.landLocation}
+              </Typography>
+              <Typography variant="body1">
+                Land Area: {selectedProject.landDetails.landArea}
+              </Typography>
+              <Typography variant="body1">
+                Project Document: {selectedProject.landDetails.projectDocument}
+              </Typography>
+              <Typography variant="body1">
+                Approval: {selectedProject.approved}
+              </Typography>
               {/* Include User ID */}
               <Typography variant="body1">
                 User ID:{" "}
@@ -113,6 +140,13 @@ export default function AllProjects() {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseDialog}>Close</Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleStartProject(selectedProject)}
+              >
+                Start the Project
+              </Button>
             </DialogActions>
           </>
         )}
