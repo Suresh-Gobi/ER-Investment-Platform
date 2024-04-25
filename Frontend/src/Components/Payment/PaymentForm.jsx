@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 
-export default function PaymentForm() {
-  const itemName = "Fireimag";
-  const itemPrice = 500;
+export default function PaymentForm({ initialInvestment, projectTitle }) {
+  const itemName = projectTitle;
   const [quantity, setQuantity] = useState(1);
-  const [finalAmount, setFinalAmount] = useState(itemPrice);
+  const [finalAmount, setFinalAmount] = useState(initialInvestment * quantity);
 
   const decrement = () => {
     if (quantity <= 1) {
       setQuantity(1);
-      setFinalAmount(itemPrice);
+      setFinalAmount(initialInvestment);
     } else {
       setQuantity(quantity - 1);
-      setFinalAmount(finalAmount - itemPrice);
+      setFinalAmount(initialInvestment * (quantity - 1));
     }
   };
 
   const increment = () => {
     setQuantity(quantity + 1);
-    setFinalAmount(finalAmount + itemPrice);
+    setFinalAmount(initialInvestment * (quantity + 1));
   };
 
   const checkout = async () => {
@@ -34,7 +33,7 @@ export default function PaymentForm() {
             {
               id: 1,
               quantity: quantity,
-              price: itemPrice,
+              price: initialInvestment,
               name: itemName,
             },
           ],
@@ -50,12 +49,12 @@ export default function PaymentForm() {
   return (
     <div>
       <h1>{itemName}</h1>
-      <p>Price: ${itemPrice}</p>
+      <p>Price: ${initialInvestment}</p>
       <p>Quantity: {quantity}</p>
       <p>Total Amount: ${finalAmount}</p>
       <button onClick={decrement}>-</button>
       <button onClick={increment}>+</button>
-      <button onClick={checkout}>Checkout</button>
+      <button onClick={checkout}>Start the project</button>
     </div>
   );
 }

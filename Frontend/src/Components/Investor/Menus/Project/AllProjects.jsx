@@ -11,14 +11,16 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
-import Chat from "../../ChatInvestor"; // Import the Chat component from the appropriate location
+import { useNavigate } from "react-router-dom";
+import Chat from "../../ChatInvestor";
+import PaymentForm from "../../../Payment/PaymentForm";
 
 export default function AllProjects() {
   const [allProjects, setAllProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const navigate = useNavigate(); // Initialize useHistory
+  const [initialInvestment, setInitialInvestment] = useState(500);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllProjects = async () => {
@@ -34,7 +36,7 @@ export default function AllProjects() {
     };
 
     fetchAllProjects();
-  }, []); // Empty dependency array to run effect only once on mount
+  }, []);
 
   const handleViewProject = (project) => {
     setSelectedProject(project);
@@ -44,6 +46,19 @@ export default function AllProjects() {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
+  const handleStartProject = (project) => {
+    console.log("Selected Project:", project);
+    if (project && project.InvestmentRange) {
+      setInitialInvestment(project.InvestmentRange);
+      setSelectedProject(project);
+      setOpenDialog(true);
+    } else {
+      console.error("Selected project or InvestmentRange is not defined.");
+    }
+  };
+  
+  
 
   const handleChatNow = (project) => {
     // Navigate to /chat and pass selectedProject.user._id as a query parameter
@@ -147,6 +162,12 @@ export default function AllProjects() {
               >
                 Start the Project
               </Button>
+              {selectedProject && (
+                <PaymentForm
+                  initialInvestment={initialInvestment}
+                  projectTitle={selectedProject.projectTitle}
+                />
+              )}
             </DialogActions>
           </>
         )}
