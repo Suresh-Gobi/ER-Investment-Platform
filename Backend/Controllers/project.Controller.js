@@ -9,11 +9,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const secretKey = 'my-secret-code';
+const secretKey = "my-secret-code";
 
 const createProject = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, secretKey);
 
     const userId = decodedToken.id;
@@ -34,12 +34,12 @@ const createProject = async (req, res) => {
       landArea,
       projectDocument,
       reference,
+      projectStatus,
+      paidAmount,
     } = req.body;
 
-    // Upload projectDocument to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
 
-    // Create new project with Cloudinary URL and extracted userId
     const newProject = new Project({
       projectTitle,
       projectCategory,
@@ -58,6 +58,8 @@ const createProject = async (req, res) => {
         approved: false,
         reference,
       },
+      projectStatus,
+      paidAmount,
       user: userId,
     });
 
@@ -136,9 +138,35 @@ const updateApprovalStatus = async (req, res) => {
   }
 };
 
+const updateProjectStatusAndAmount = async (req, res) => {
+  try {
+    const { projectId, projectStatus, paidAmount } = req.body;
+
+    if (!projectId || !projectStatus || !paidAmount) {
+      return res.status(400).json({ message: "Invalid request data" });
+    }
+
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { projectStatus, paidAmount },
+      { new: true }
+    );
+
+    if (!updatedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.json({ message: "Project status and amount updated", project: updatedProject });
+  } catch (error) {
+    console.error("Error updating project status and amount:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
   getAllProjects,
   updateApprovalStatus,
+  updateProjectStatusAndAmount,
 };

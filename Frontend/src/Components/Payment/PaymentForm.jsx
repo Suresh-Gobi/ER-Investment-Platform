@@ -66,6 +66,21 @@ export default function PaymentForm({
       );
       const paymentCreateData = await paymentCreateRes.json();
 
+      // const paymentUpdateRes = await fetch(
+      //   "http://localhost:5000/api/project/paymentupdate",
+      //   {
+      //     method: "PUT",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       projectId: projectUserId, // Assuming projectUserId is the projectId
+      //       paidAmount: finalAmount, // Use the finalAmount calculated in the form
+      //       projectStatus: "started", // Set the project status to "started"
+      //     }),
+      //   }
+      // );
+
       // Redirect to the payment URL returned by the checkout API
       window.location = checkoutData.url;
     } catch (error) {

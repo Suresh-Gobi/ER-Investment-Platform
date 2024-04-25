@@ -24,8 +24,13 @@ const projectSchema = new mongoose.Schema({
     reference: String,
   },
 
+  //Project Payment
   projectStatus: String,
   paidAmount: String,
+
+  // Project Progress
+  
+  
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
