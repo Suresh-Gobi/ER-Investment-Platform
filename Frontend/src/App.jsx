@@ -21,9 +21,16 @@ import PlantManage from "./Components/Admin/Menus/Plant/PlantManage";
 import GetPlant from "./Components/Admin/Menus/Plant/GetPlant";
 import AllProjects from "./Components/Investor/Menus/Project/AllProjects";
 import ChatInvestor from "./Components/Investor/ChatInvestor"
+import PaymentForm from "./Components/Payment/PaymentForm";
+
+
+// payment
+import Success from "./Components/Payment/Success";
+import Cancel from "./Components/Payment/Cancel";
 
 function App() {
   const [count, setCount] = useState(0);
+  // const stripePromise = loadStripe('pk_test_51P3Nq9KLote9DEOTknVoMZhK5ZN04UWFU9R7k2TM77qmwi7hBzgtuTSgNftQZX1dlFOMpKwDYbXMxjMuB3VJhVE000wR5IedPR');
 
   return (
     <>
@@ -43,6 +50,11 @@ function App() {
         <Route path="/getplant" element={<GetPlant />} />
         <Route path="/allprojects" element={<AllProjects />} />
         <Route path="/chat/:Id" element={<ChatInvestor />} />
+        
+        <Route path="/payment" element={<PaymentForm />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
+        {/* <Route path="/payment" element={<Elements stripe={stripePromise}><PaymentForm /></Elements>} /> */}
         </Routes>
       </BrowserRouter>
     </>
