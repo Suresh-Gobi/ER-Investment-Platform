@@ -166,6 +166,7 @@ export default function AllProjects() {
                 <PaymentForm
                   initialInvestment={initialInvestment}
                   projectTitle={selectedProject.projectTitle}
+                  projectUserId={selectedProject.user._id}
                 />
               )}
             </DialogActions>

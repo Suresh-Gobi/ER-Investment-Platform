@@ -28,14 +28,12 @@ exports.payment = async (req, res) => {
 
 exports.paymentSuccess = async (req, res) => {
   try {
-    const paymentIntentId = req.body.data.object.payment_intent;
-    const payment = await stripe.paymentIntents.retrieve(paymentIntentId);
+    const { amount, userId, projectTitle } = req.body;
 
     const newPayment = new Payment({
-      amount: payment.amount / 100,
-      currency: payment.currency.toUpperCase(),
-      user: req.user._id,
-      paymentIntentId,
+      amount: amount,
+      userId: userId,
+      projectTitle: projectTitle,
     });
 
     await newPayment.save();
@@ -45,3 +43,4 @@ exports.paymentSuccess = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+

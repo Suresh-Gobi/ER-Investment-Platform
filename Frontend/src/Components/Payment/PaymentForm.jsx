@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-export default function PaymentForm({ initialInvestment, projectTitle }) {
+export default function PaymentForm({
+  initialInvestment,
+  projectTitle,
+  projectUserId,
+}) {
   const itemName = projectTitle;
   const [quantity, setQuantity] = useState(1);
   const [finalAmount, setFinalAmount] = useState(initialInvestment * quantity);
@@ -22,25 +26,48 @@ export default function PaymentForm({ initialInvestment, projectTitle }) {
 
   const checkout = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/payments/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: "cors",
-        body: JSON.stringify({
-          items: [
-            {
-              id: 1,
-              quantity: quantity,
-              price: initialInvestment,
-              name: itemName,
-            },
-          ],
-        }),
-      });
-      const data = await res.json();
-      window.location = data.url; // Redirect to Stripe Checkout page
+      // First, make the checkout request to get the payment URL
+      const checkoutRes = await fetch(
+        "http://localhost:5000/api/payments/checkout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+          body: JSON.stringify({
+            items: [
+              {
+                id: 1,
+                quantity: quantity,
+                price: initialInvestment,
+                name: itemName,
+              },
+            ],
+          }),
+        }
+      );
+      const checkoutData = await checkoutRes.json();
+
+      // Next, make the payment create request to save the payment details
+      const paymentCreateRes = await fetch(
+        "http://localhost:5000/api/payments/paymentcreate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: finalAmount,
+            userId: projectUserId,
+            projectTitle: projectTitle,
+          }),
+        }
+      );
+      const paymentCreateData = await paymentCreateRes.json();
+
+      // Redirect to the payment URL returned by the checkout API
+      window.location = checkoutData.url;
     } catch (error) {
       console.log(error);
     }
@@ -50,6 +77,7 @@ export default function PaymentForm({ initialInvestment, projectTitle }) {
     <div>
       <h1>{itemName}</h1>
       <p>Price: ${initialInvestment}</p>
+      <p>Id: {projectUserId}</p>
       <p>Quantity: {quantity}</p>
       <p>Total Amount: ${finalAmount}</p>
       <button onClick={decrement}>-</button>
