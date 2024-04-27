@@ -110,7 +110,10 @@ export default function AllProjects() {
             <DialogTitle>{selectedProject.projectTitle}</DialogTitle>
             <DialogContent>
               <Typography variant="body1">
-                Project Id: {selectedProject._id}
+                Project ID: {selectedProject._id}
+              </Typography>
+              <Typography variant="body1">
+                Project Title: {selectedProject.projectTitle}
               </Typography>
               <Typography variant="body1">
                 Project Category: {selectedProject.projectCategory}
@@ -168,7 +171,7 @@ export default function AllProjects() {
                   initialInvestment={initialInvestment}
                   projectTitle={selectedProject.projectTitle}
                   projectUserId={selectedProject.user._id}
-                  // projectId={selectedProject._id}
+                  projectId={selectedProject._id}
                 />
               )}
             </DialogActions>

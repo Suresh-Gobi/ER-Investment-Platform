@@ -4,6 +4,7 @@ export default function PaymentForm({
   initialInvestment,
   projectTitle,
   projectUserId,
+  projectId,
 }) {
   const itemName = projectTitle;
   const [quantity, setQuantity] = useState(1);
@@ -26,7 +27,8 @@ export default function PaymentForm({
 
   const checkout = async () => {
     try {
-      // First, make the checkout request to get the payment URL
+      const token = localStorage.getItem("token");
+
       const checkoutRes = await fetch(
         "http://localhost:5000/api/payments/checkout",
         {
@@ -49,40 +51,26 @@ export default function PaymentForm({
       );
       const checkoutData = await checkoutRes.json();
 
-      // Next, make the payment create request to save the payment details
-      const paymentCreateRes = await fetch(
-        "http://localhost:5000/api/payments/paymentcreate",
+      // Redirect to the payment URL returned by the checkout API
+      window.location.href = checkoutData.url;
+
+      const paymentProjectRes = await fetch(
+        "http://localhost:5000/api/project/paymentproject",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            amount: finalAmount,
-            userId: projectUserId,
-            projectTitle: projectTitle,
+            projectId: projectId,
+            paidAmount: finalAmount,
+            // You need to extract the investorId in your backend using the provided token
+            startDate: new Date().toISOString(),
           }),
         }
       );
-      const paymentCreateData = await paymentCreateRes.json();
-
-      // const paymentUpdateRes = await fetch(
-      //   "http://localhost:5000/api/project/paymentupdate",
-      //   {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       projectId: projectUserId, // Assuming projectUserId is the projectId
-      //       paidAmount: finalAmount, // Use the finalAmount calculated in the form
-      //       projectStatus: "started", // Set the project status to "started"
-      //     }),
-      //   }
-      // );
-
-      // Redirect to the payment URL returned by the checkout API
-      window.location = checkoutData.url;
+      const paymentProjectData = await paymentProjectRes.json();
     } catch (error) {
       console.log(error);
     }
@@ -91,6 +79,7 @@ export default function PaymentForm({
   return (
     <div>
       <h1>{itemName}</h1>
+      <p>Project Id: ${projectId}</p>
       <p>Price: ${initialInvestment}</p>
       <p>Id: {projectUserId}</p>
       <p>Quantity: {quantity}</p>
@@ -101,3 +90,4 @@ export default function PaymentForm({
     </div>
   );
 }
+                        
