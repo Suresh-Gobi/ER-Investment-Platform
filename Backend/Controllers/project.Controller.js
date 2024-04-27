@@ -36,6 +36,23 @@ const createProject = async (req, res) => {
       reference,
       projectStatus,
       paidAmount,
+      startDate,
+      endDate,
+      duration,
+      mileston,
+      comments,
+      investorId,
+      // iot device
+      deviceID,
+      location,
+      soilHealth,
+      humidity,
+      temperature,
+      farmingArea,
+      plantHealth,
+      co2Concentration,
+      h2oConcentration,
+
     } = req.body;
 
     const result = await cloudinary.uploader.upload(req.file.path);
@@ -58,13 +75,50 @@ const createProject = async (req, res) => {
         approved: false,
         reference,
       },
-      projectStatus,
-      paidAmount,
+      projectStatus: "Pending",
+      paidAmount: "0",
+      investorId: "",
+      startDate: "",
+      endDate: "",
+      duration: "",
+      mileston: "",
+      comments: "",
       user: userId,
+       // New fields with default dummy data
+       deviceID: "exampleDeviceID",
+       location: {
+         type: "Point",
+         coordinates: [0, 0], 
+       },
+       soilHealth: {
+         pHLevel: 7,
+         nutrientLevel: {
+           nitrogen: 10,
+           phosphorus: 5,
+           potassium: 8,
+         },
+         waterLevel: 50,
+       },
+       humidity: {
+         value: 60,
+       },
+       temperature: {
+         value: 25,
+       },
+       farmingArea: 1000,
+       plantHealth: {
+         biomass: 500,
+       },
+       co2Concentration: {
+         value: 400,
+       },
+       h2oConcentration: {
+         value: 100,
+       },
     });
 
     // Save the new project to the database
-    const savedProject = await newProject.save(); // Save the project and capture the result
+    const savedProject = await newProject.save(); 
 
     // Send success response with the saved project
     res
@@ -163,10 +217,49 @@ const updateProjectStatusAndAmount = async (req, res) => {
   }
 };
 
+const updatePaymentDetails = async (req, res) => {
+  try {
+    const { projectId, startDate, paidAmount } = req.body;
+
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, secretKey);
+
+    const investorId = decodedToken.id;
+
+    // Validate the request data
+    if (!projectId || !startDate || !investorId || !paidAmount) {
+      return res.status(400).json({ message: "Invalid request data" });
+    }
+
+    // Find and update the project by ID
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        projectStatus: "Started",
+        startDate,
+        investorId,
+        paidAmount,
+      },
+      { new: true }
+    );
+
+    // Check if the project was found and updated successfully
+    if (!updatedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.json({ message: "Payment details updated", project: updatedProject });
+  } catch (error) {
+    console.error("Error updating payment details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
   getAllProjects,
   updateApprovalStatus,
   updateProjectStatusAndAmount,
+  updatePaymentDetails,
 };

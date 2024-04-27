@@ -57,8 +57,6 @@ export default function AllProjects() {
       console.error("Selected project or InvestmentRange is not defined.");
     }
   };
-  
-  
 
   const handleChatNow = (project) => {
     // Navigate to /chat and pass selectedProject.user._id as a query parameter
@@ -111,6 +109,9 @@ export default function AllProjects() {
           <>
             <DialogTitle>{selectedProject.projectTitle}</DialogTitle>
             <DialogContent>
+              <Typography variant="body1">
+                Project Id: {selectedProject._id}
+              </Typography>
               <Typography variant="body1">
                 Project Category: {selectedProject.projectCategory}
               </Typography>
@@ -167,6 +168,7 @@ export default function AllProjects() {
                   initialInvestment={initialInvestment}
                   projectTitle={selectedProject.projectTitle}
                   projectUserId={selectedProject.user._id}
+                  // projectId={selectedProject._id}
                 />
               )}
             </DialogActions>

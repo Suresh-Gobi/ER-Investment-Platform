@@ -27,9 +27,75 @@ const projectSchema = new mongoose.Schema({
   //Project Payment
   projectStatus: String,
   paidAmount: String,
+  investorId: String,
 
   // Project Progress
-  
+  startDate: String,
+  endDate: String,
+  duration: String,
+  mileston: String,
+  comments: String,
+
+  // Project land analyze live with iot device
+  deviceID: String,
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
+  soilHealth: {
+    pHLevel: Number,
+    nutrientLevel: {
+      nitrogen: Number,
+      phosphorus: Number,
+      potassium: Number,
+    },
+    waterLevel: Number,
+  },
+  humidity: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "%",
+    },
+  },
+  temperature: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "°C",
+    },
+  },
+  farmingArea: {
+    type: Number,
+  },
+  plantHealth: {
+    biomass: Number,
+  },
+  co2Concentration: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "ppm",
+    },
+  },
+  h2oConcentration: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "ppm",
+    },
+  },
   
   user: {
     type: mongoose.Schema.Types.ObjectId,

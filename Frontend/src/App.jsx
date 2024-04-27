@@ -22,7 +22,7 @@ import GetPlant from "./Components/Admin/Menus/Plant/GetPlant";
 import AllProjects from "./Components/Investor/Menus/Project/AllProjects";
 import ChatInvestor from "./Components/Investor/ChatInvestor"
 import PaymentForm from "./Components/Payment/PaymentForm";
-
+import OngoingProject from "./Components/Investment/Menus/ProjectDetails/ongoingProject";
 
 // payment
 import Success from "./Components/Payment/Success";
@@ -49,6 +49,8 @@ function App() {
         <Route path="/plant" element={<PlantManage />} />
         <Route path="/getplant" element={<GetPlant />} />
         <Route path="/allprojects" element={<AllProjects />} />
+        <Route path="/on" element={<OngoingProject />} />
+
         <Route path="/chat/:Id" element={<ChatInvestor />} />
         
         <Route path="/payment" element={<PaymentForm />} />
