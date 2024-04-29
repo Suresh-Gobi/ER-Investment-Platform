@@ -23,6 +23,7 @@ import AllProjects from "./Components/Investor/Menus/Project/AllProjects";
 import ChatInvestor from "./Components/Investor/ChatInvestor"
 import PaymentForm from "./Components/Payment/PaymentForm";
 import OngoingProject from "./Components/Investment/Menus/ProjectDetails/ongoingProject";
+import InvestorLogin from "./Pages/Login/InvestorLogin";
 
 // payment
 import Success from "./Components/Payment/Success";
@@ -43,6 +44,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admindashboard" element={<AdminDash />} />
         <Route path="/investordashboard" element={<InvestorDashboard />} />
+        <Route path="/investorlogin" element={<InvestorLogin />} />
 
         <Route path="/projects" element={<Projects />} />
         <Route path="/geo" element={<GeoLocationAlaysis />} />

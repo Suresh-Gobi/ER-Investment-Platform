@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Import useHistory for redirection
+import { useNavigate } from 'react-router-dom'; // Import useHistory for redirection
 import axios from 'axios';
 
 export default function InvestorLogin() {
@@ -8,7 +8,7 @@ export default function InvestorLogin() {
     password: '',
   });
   const [error, setError] = useState('');
-  const history = useHistory(); // Initialize useHistory for redirection
+  const navigate = useNavigate(); // Initialize useHistory for redirection
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +28,7 @@ export default function InvestorLogin() {
       localStorage.setItem('token', token);
 
       // Redirect to "/investordash"
-      history.push('/investordash');
+      navigate('/investordash');
     } catch (error) {
       setError(error.response.data.message);
     }
