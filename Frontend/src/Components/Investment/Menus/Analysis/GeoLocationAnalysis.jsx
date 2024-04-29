@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
 const GeoLocationAnalysis = () => {
   const [map, setMap] = useState(null);
@@ -168,50 +179,105 @@ const GeoLocationAnalysis = () => {
     // Calculate total revenue
     const totalPlants = plantsPerSquareMeter * areaInSquareMeters;
     const totalRevenue =
-      ( totalPlants * marketRatePerKg) /
-      investmentPerSquareMeter;
+      (totalPlants * marketRatePerKg) / investmentPerSquareMeter;
 
     return totalRevenue.toFixed(2); // Round to two decimal places
+  };
+
+  const formatWeatherDataForChart = () => {
+    return pastWeatherData.map((item) => ({
+      date: new Date(item.dt * 1000).toLocaleDateString(),
+      temperature: item.main.temp,
+      humidity: item.main.humidity,
+    }));
   };
 
   return (
     <div>
       <div id="map" style={{ width: "100%", height: "400px" }}></div>
       <div>
-        <strong>Latitude:</strong>{" "}
-        {polygonVertices.length > 0 && polygonVertices[0].latitude} <br />
-        <strong>Longitude:</strong>{" "}
-        {polygonVertices.length > 0 && polygonVertices[0].longitude} <br />
-        <strong>Area Name:</strong> {locationDetails.areaName} <br />
-        <strong>Area:</strong> {areaInSquareMeters} square meters <br />
-        <strong>Current Weather:</strong>{" "}
-        {currentWeatherData &&
-        currentWeatherData.weather &&
-        currentWeatherData.weather.length > 0
-          ? `${currentWeatherData.weather[0].main}, ${currentWeatherData.main.temp}°C, Humidity: ${currentWeatherData.main.humidity}%`
-          : "No weather data"}{" "}
-        <br />
-        <strong>Weather:</strong>{" "}
-        {weatherData && weatherData.weather && weatherData.weather.length > 0
-          ? `${weatherData.weather[0].main}, ${weatherData.main.temp}°C, Humidity: ${weatherData.main.humidity}%`
-          : "No weather data"}{" "}
-        <br />
-        <strong>Vertices:</strong>
-        {polygonVertices.map((vertex, index) => (
-          <div key={index}>
-            Vertex {index + 1}: Latitude {vertex.latitude}, Longitude{" "}
-            {vertex.longitude} - {locationDetails.areaName}
-          </div>
-        ))}
+        <Grid container spacing={2}>
+          {/* Display first card */}
+          <Grid item xs={12} sm={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Location Details</Typography>
+                <Typography>
+                  <strong>Latitude:</strong>{" "}
+                  {polygonVertices.length > 0 && polygonVertices[0].latitude}
+                </Typography>
+                <Typography>
+                  <strong>Longitude:</strong>{" "}
+                  {polygonVertices.length > 0 && polygonVertices[0].longitude}
+                </Typography>
+                <Typography>
+                  <strong>Area Name:</strong> {locationDetails.areaName}
+                </Typography>
+                <Typography>
+                  <strong>Area:</strong> {areaInSquareMeters} square meters
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          {/* Display second card */}
+          <Grid item xs={12} sm={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Weather Details</Typography>
+                <Typography>
+                  <strong>Current Weather:</strong>{" "}
+                  {currentWeatherData &&
+                  currentWeatherData.weather &&
+                  currentWeatherData.weather.length > 0
+                    ? `${currentWeatherData.weather[0].main}, ${currentWeatherData.main.temp}°C, Humidity: ${currentWeatherData.main.humidity}%`
+                    : "No weather data"}
+                </Typography>
+                <Typography>
+                  <strong>Weather:</strong>{" "}
+                  {weatherData &&
+                  weatherData.weather &&
+                  weatherData.weather.length > 0
+                    ? `${weatherData.weather[0].main}, ${weatherData.main.temp}°C, Humidity: ${weatherData.main.humidity}%`
+                    : "No weather data"}
+                </Typography>
+                <Typography variant="h6">Vertices</Typography>
+                {/* Display vertices */}
+                {polygonVertices.map((vertex, index) => (
+                  <Typography key={index}>
+                    Vertex {index + 1}: Latitude {vertex.latitude}, Longitude{" "}
+                    {vertex.longitude} - {locationDetails.areaName}
+                  </Typography>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
       <div>
         <strong>Past 3 Years Weather Data:</strong>
+        
+        <LineChart
+          width={800}
+          height={400}
+          data={formatWeatherDataForChart()}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="temperature" stroke="#FF4500" />
+          <Line type="monotone" dataKey="humidity" stroke="#00BFFF" />
+        </LineChart>
+
         {pastWeatherData.map((item, index) => (
           <div key={index}>
             Date: {new Date(item.dt * 1000).toLocaleDateString()}, Temperature:{" "}
             {item.main.temp}°C, Humidity: {item.main.humidity}%
           </div>
         ))}
+          
       </div>
 
       <div>

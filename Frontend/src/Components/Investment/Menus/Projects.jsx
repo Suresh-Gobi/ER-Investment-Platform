@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 
 import MyProjects from "./ProjectDetails/myProject";
+import OnGoingProjects from './ProjectDetails/ongoingProject';
 
 export default function Projects() {
   const [projectData, setProjectData] = useState({
@@ -111,6 +112,8 @@ export default function Projects() {
 
       <hr />
       <MyProjects />
+      <br/><br/>
+      <OnGoingProjects/>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <DialogTitle>Create Project</DialogTitle>
