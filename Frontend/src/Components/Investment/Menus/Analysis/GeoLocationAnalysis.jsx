@@ -9,8 +9,19 @@ import {
   List,
   ListItem,
   ListItemText,
+  Button,
+  Modal,
+  Box,
 } from "@mui/material";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 const GeoLocationAnalysis = () => {
   const [map, setMap] = useState(null);
@@ -27,6 +38,8 @@ const GeoLocationAnalysis = () => {
   const [pastWeatherData, setPastWeatherData] = useState([]);
   const [currentWeatherData, setCurrentWeatherData] = useState(null);
   const [plants, setPlants] = useState([]);
+  const [selectedPlant, setSelectedPlant] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     // Load the Google Maps API script dynamically
@@ -170,7 +183,7 @@ const GeoLocationAnalysis = () => {
   };
 
   // Function to calculate total revenue
-  const calculateTotalRevenue = (plant) => {
+  const calculateTotalRevenue = (plant, areaInSquareMeters) => {
     const growingTimeLimit = plant.growingTimeLimit; // in days
     const plantsPerSquareMeter = plant.plantsPerSquareMeter;
     const marketRatePerKg = plant.marketRatePerKg; // $ per kg
@@ -190,6 +203,15 @@ const GeoLocationAnalysis = () => {
       temperature: item.main.temp,
       humidity: item.main.humidity,
     }));
+  };
+
+  const handleOpenModal = (plant) => {
+    setSelectedPlant(plant);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -255,75 +277,127 @@ const GeoLocationAnalysis = () => {
       </div>
       <div>
         <strong>Past 3 Years Weather Data:</strong>
-        
-        <LineChart
-          width={800}
-          height={400}
-          data={formatWeatherDataForChart()}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="temperature" stroke="#FF4500" />
-          <Line type="monotone" dataKey="humidity" stroke="#00BFFF" />
-        </LineChart>
 
-        {pastWeatherData.map((item, index) => (
-          <div key={index}>
-            Date: {new Date(item.dt * 1000).toLocaleDateString()}, Temperature:{" "}
-            {item.main.temp}°C, Humidity: {item.main.humidity}%
-          </div>
-        ))}
-          
+        <div id="map" style={{ width: "100%" }}></div>
+        <div>
+          <Grid container spacing={2}>
+            {/* Display first card */}
+            <Grid item xs={12} sm={6}>
+              <Card>
+                <CardContent>
+                  {pastWeatherData.map((item, index) => (
+                    <div key={index}>
+                      Date: {new Date(item.dt * 1000).toLocaleDateString()},
+                      Temperature: {item.main.temp}°C, Humidity:{" "}
+                      {item.main.humidity}%
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+            {/* Display second card for LineChart */}
+            <Grid item xs={12} sm={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">Past Weather Data Chart</Typography>
+                  <LineChart
+                    width={800}
+                    height={400}
+                    data={formatWeatherDataForChart()}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="temperature"
+                      stroke="#FF4500"
+                    />
+                    <Line type="monotone" dataKey="humidity" stroke="#00BFFF" />
+                  </LineChart>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </div>
       </div>
 
-      <div>
-        <h2>Filtered Plant Details</h2>
-        <ul>
+      <div className="container">
+        <h1>Suggested Plants to Gorw According to the Geo Location</h1>
+        <br />
+        <Grid container spacing={2}>
           {plants.map((plant) => (
-            <li key={plant._id}>
-              <strong>Plant Name:</strong> {plant.plantName}
-              <br />
-              <strong>Description:</strong> {plant.plantDescription}
-              <br />
-              <strong>Species:</strong> {plant.plantSpecies}
-              <br />
-              <strong>Scientific Name:</strong> {plant.scientificName}
-              <br />
+            <Grid key={plant._id} item xs={12} sm={6} md={4}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  src={plant.plantImgUrl}
+                  alt={plant.plantName}
+                  style={{ height: 150, objectFit: "cover" }} // Reduced height
+                />
+                <CardContent>
+                  <Typography variant="h6">{plant.plantName}</Typography>
+                  {/* Pass the plant object to handleOpenModal */}
+                  <Button onClick={() => handleOpenModal(plant)}>
+                    View Details
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+
+      {/* Render modal content conditionally */}
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            width: "90%",
+            maxWidth: 600,
+            bgcolor: "background.paper",
+            p: 2,
+            margin: "auto",
+          }}
+        >
+          {selectedPlant && (
+            <div key={selectedPlant._id}>
+              {/* Use selectedPlant._id as a unique key */}
               <strong>Image:</strong>{" "}
               <img
-                src={plant.plantImgUrl}
-                alt={plant.plantName}
+                src={selectedPlant.plantImgUrl}
+                alt={selectedPlant.plantName}
                 style={{ maxWidth: "200px" }}
               />
+              <strong>Plant Name:</strong> {selectedPlant.plantName}
               <br />
-              <strong>Temperature Range:</strong> {plant.temperatureRange.min}°C
-              - {plant.temperatureRange.max}°C
+              <strong>Description:</strong> {selectedPlant.plantDescription}
               <br />
-              <strong>Humidity Range:</strong> {plant.humidityRange.min}% -{" "}
-              {plant.humidityRange.max}%
+              <strong>Species:</strong> {selectedPlant.plantSpecies}
               <br />
-              <strong>Suitable Locations:</strong> {plant.suitableLocations}
+              <strong>Scientific Name:</strong> {selectedPlant.scientificName}
               <br />
-              <strong>Growing Time Limit:</strong> {plant.growingTimeLimit} days
               <br />
               <strong>Plants Per Square Meter:</strong>{" "}
-              {plant.plantsPerSquareMeter}
+              {selectedPlant.plantsPerSquareMeter}
               <br />
-              <strong>Market Rate Per Kg:</strong> ${plant.marketRatePerKg}
+              <strong>Market Rate Per Kg:</strong> LKR
+              {selectedPlant.marketRatePerKg}
               <br />
-              <strong>Investment Per Square Meter:</strong> $
-              {plant.investmentPerSquareMeter}
+              <strong>Investment Per Square Meter:</strong> LKR
+              {selectedPlant.investmentPerSquareMeter}
               <br />
-              <strong>Total Revenue:</strong> ${calculateTotalRevenue(plant)}
+              <strong>Total Revenue:</strong> LKR
+              {calculateTotalRevenue(selectedPlant, areaInSquareMeters)}
               <br />
-            </li>
-          ))}
-        </ul>
-      </div>
+              {/* Add other plant details */}
+              <Button onClick={handleCloseModal}>Close</Button>
+            </div>
+          )}
+        </Box>
+      </Modal>
     </div>
   );
 };
