@@ -7,11 +7,13 @@ import "./App.css";
 //Import Pages
 import Home from "./Pages/Home/Home";
 import Signup from "./Pages/Signup/Signup";
-import Login from "./Pages/Login/Login";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AdminLogin from "./Pages/Login/AdminLogin";
 import AdminDash from "./Pages/Dashboard/AdminDashboard"
 import InvestorDashboard from "./Pages/Dashboard/InvestorDashboard";
+
+import MainLogin from "./Pages/Login/MainLogin";
+import MyProject from "./Components/Investment/Menus/ProjectDetails/myProject";
 
 //test
 // import Project from "./Components/Investment/Menus/ProjectDetails/myProject";
@@ -23,7 +25,6 @@ import AllProjects from "./Components/Investor/Menus/Project/AllProjects";
 import ChatInvestor from "./Components/Investor/ChatInvestor"
 import PaymentForm from "./Components/Payment/PaymentForm";
 import OngoingProject from "./Components/Investment/Menus/ProjectDetails/ongoingProject";
-import InvestorLogin from "./Pages/Login/InvestorLogin";
 
 // payment
 import Success from "./Components/Payment/Success";
@@ -39,12 +40,12 @@ function App() {
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/singup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<MainLogin />} />
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admindashboard" element={<AdminDash />} />
         <Route path="/investordashboard" element={<InvestorDashboard />} />
-        <Route path="/investorlogin" element={<InvestorLogin />} />
+        <Route path="/myprojects" element={<MyProject />} />
 
         <Route path="/projects" element={<Projects />} />
         <Route path="/geo" element={<GeoLocationAlaysis />} />

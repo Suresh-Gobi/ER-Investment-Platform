@@ -18,7 +18,7 @@ export default function Profile() {
     file: null,
   });
 
-  const token = localStorage.getItem('token'); // Assuming the JWT token is stored in localStorage
+  const token = localStorage.getItem('token');
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;

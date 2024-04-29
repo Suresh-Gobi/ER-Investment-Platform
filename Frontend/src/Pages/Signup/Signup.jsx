@@ -96,7 +96,7 @@ export default function Signup() {
   return (
     <Card sx={{ maxWidth: 400, margin: 'auto', marginTop: '100', textAlign: 'center', padding: '20px' }}>
       <CardContent>
-        <Typography variant="h4" gutterBottom>Sign Up</Typography>
+        <Typography variant="h6" gutterBottom>Sign Up to ERP Plateform</Typography>
         <FormControl sx={{ m: 1, minWidth: 300 }}>
           <InputLabel id="role-label">Role</InputLabel>
           <Select

@@ -49,14 +49,18 @@ export default function Login() {
         maxWidth: 400,
         margin: "auto",
         marginTop: "100px",
-        textAlign: "center",
         padding: "20px",
       }}
     >
       <CardContent>
-        <Typography variant="h4" gutterBottom>
-          Login
+        <Typography variant="h6" gutterBottom>
+          Activist Login
         </Typography>
+        <p style={{ color: "#888" }}>
+          Contribute to positive change and impact. Login now to access your
+          activist dashboard.
+        </p>
+
         <TextField
           label="Email"
           variant="outlined"
@@ -76,9 +80,9 @@ export default function Login() {
         <Button variant="contained" onClick={handleLogin}>
           Login
         </Button>
-        <Typography variant="body2" sx={{ marginTop: "10px" }}>
+        {/* <Typography variant="body2" sx={{ marginTop: "10px" }}>
           Don't have an account? <a href="/signup">Sign Up</a>
-        </Typography>
+        </Typography> */}
       </CardContent>
     </Card>
   );

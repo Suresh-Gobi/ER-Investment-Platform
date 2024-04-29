@@ -52,7 +52,9 @@ export default function MyProject() {
 
   return (
     <div>
+      <br />
       <h1>My Projects</h1>
+      <br />
       <Grid container spacing={3}>
         {projects.map((project) => (
           <Grid item xs={12} sm={6} md={4} key={project._id}>
@@ -79,10 +81,39 @@ export default function MyProject() {
         ))}
       </Grid>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>{selectedProject?.projectTitle}</DialogTitle>
         <DialogContent>
           <Typography>{selectedProject?.projectDescription}</Typography>
+          <Typography>{selectedProject?.projectTimeline}</Typography>
+          <Typography>{selectedProject?.plantsToPlant}</Typography>
+          <Typography>{selectedProject?.searchTags}</Typography>
+          <Typography>{selectedProject?.InvestmentRange}</Typography>
+
+          <Typography>{selectedProject?.InitialInvestment}</Typography>
+          <Typography>{selectedProject?.EstimatedTotal}</Typography>
+          <Typography>{selectedProject?.ExpectedRevenue}</Typography>
+          <Typography>{selectedProject?.landDetails.landLocation}</Typography>
+
+          <Typography>{selectedProject?.landDetails.landArea}</Typography>
+          <Typography>
+            <Button
+              component="a"
+              href={selectedProject?.landDetails.projectDocument}
+              target="_blank"
+              download
+            >
+              Download Document
+            </Button>
+          </Typography>
+
+          <Typography>{selectedProject?.landDetails.approved}</Typography>
+
           {/* Add more project details here */}
         </DialogContent>
         <DialogActions>
