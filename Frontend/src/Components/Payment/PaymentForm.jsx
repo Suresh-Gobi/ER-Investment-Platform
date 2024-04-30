@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Typography, Button, Grid, Card, Container } from "@mui/material";
 
 export default function PaymentForm({
   initialInvestment,
@@ -8,21 +9,22 @@ export default function PaymentForm({
 }) {
   const itemName = projectTitle;
   const [quantity, setQuantity] = useState(1);
-  const [finalAmount, setFinalAmount] = useState(initialInvestment * quantity);
+  const [finalAmount, setFinalAmount] = useState(initialInvestment);
+
+  useEffect(() => {
+    setFinalAmount(initialInvestment * quantity);
+  }, [quantity, initialInvestment]);
 
   const decrement = () => {
     if (quantity <= 1) {
       setQuantity(1);
-      setFinalAmount(initialInvestment);
     } else {
       setQuantity(quantity - 1);
-      setFinalAmount(initialInvestment * (quantity - 1));
     }
   };
 
   const increment = () => {
     setQuantity(quantity + 1);
-    setFinalAmount(initialInvestment * (quantity + 1));
   };
 
   const checkout = async () => {
@@ -65,7 +67,6 @@ export default function PaymentForm({
           body: JSON.stringify({
             projectId: projectId,
             paidAmount: finalAmount,
-            // You need to extract the investorId in your backend using the provided token
             startDate: new Date().toISOString(),
           }),
         }
@@ -77,17 +78,42 @@ export default function PaymentForm({
   };
 
   return (
-    <div>
-      <h1>{itemName}</h1>
-      <p>Project Id: ${projectId}</p>
-      <p>Price: ${initialInvestment}</p>
-      <p>Id: {projectUserId}</p>
-      <p>Quantity: {quantity}</p>
-      <p>Total Amount: ${finalAmount}</p>
-      <button onClick={decrement}>-</button>
-      <button onClick={increment}>+</button>
-      <button onClick={checkout}>Start the project</button>
-    </div>
+    <Container>
+      <Card style={{padding: '20px'}}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12}>
+            <Typography variant="h6">{itemName}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Project Id: {projectId}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Price: ${initialInvestment}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Id: {projectUserId}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Quantity: {quantity}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Total Amount: ${finalAmount}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="secondary" onClick={decrement}>
+              -
+            </Button>
+            <Button variant="contained" color="primary" onClick={increment}>
+              +
+            </Button>
+            <br />
+            <br />
+            <Button variant="contained" onClick={checkout}>
+              Start the project
+            </Button>
+          </Grid>
+        </Grid>
+      </Card>
+    </Container>
   );
 }
-                        

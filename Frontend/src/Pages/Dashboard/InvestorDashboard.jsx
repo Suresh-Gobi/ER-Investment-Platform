@@ -1,10 +1,10 @@
 import React from "react";
-import Projects from "../../Components/Investor/Menus/Project/AllProjects";
+import SideBarInvestor from '../../Components/Investor/SideBarInvestor'
 
 export default function InvestorDashboard() {
   return (
     <>
-      <Projects />
+      <SideBarInvestor />
     </>
   );
 }

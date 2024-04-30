@@ -23,16 +23,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import OverviewIcon from "@mui/icons-material/Assessment"; // Import the icon for Overview
-import ProjectsIcon from "@mui/icons-material/Work"; // Import the icon for Projects
-import ChatIcon from "@mui/icons-material/Chat"; // Import the icon for Chat
-import PaymentIcon from "@mui/icons-material/Payment"; // Import the icon for Payment
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the new icon for Profile
-import Overview from "./Menus/Overview";
-import Projects from "./Menus/Projects";
-import Profile from "./Menus/Profile";
-import Chat from "./Menus/Chat";
-import Payment from "./Menus/Payment";
+import OverviewIcon from "@mui/icons-material/Assessment"; 
+import ProjectsIcon from "@mui/icons-material/Work"; 
+import ChatIcon from "@mui/icons-material/Chat";
+import PaymentIcon from "@mui/icons-material/Payment"; 
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Overview from "./Menus/Overviews";
 
 const drawerWidth = 240;
 
@@ -121,16 +117,8 @@ export default function MiniDrawer() {
   // Function to render icon based on menu item
   const renderIcon = (text) => {
     switch (text) {
-      case "Overview":
+      case "Overviews":
         return <OverviewIcon />;
-      case "Projects":
-        return <ProjectsIcon />;
-      case "Chat":
-        return <ChatIcon />;
-      case "Payment":
-        return <PaymentIcon />;
-      case "Profile":
-        return <AccountCircleIcon />;
       default:
         return null;
     }
@@ -170,7 +158,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Overview", "Projects", "Chat", "Payment", "Profile"].map((text) => (
+          {["Overviews"].map((text) => (
             <ListItem
               key={text}
               button
@@ -190,11 +178,7 @@ export default function MiniDrawer() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {/* Render corresponding component based on selected item */}
-        {selectedItem === "Overview" && <Overview />}
-        {selectedItem === "Projects" && <Projects />}
-        {selectedItem === "Profile" && <Profile />}
-        {selectedItem === "Chat" && <Chat />}
-        {selectedItem === "Payment" && <Payment />}
+        {selectedItem === "Overviews" && <Overview />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>

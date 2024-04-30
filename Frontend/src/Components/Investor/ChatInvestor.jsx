@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5000"); // Connect to your Socket.io server
+const socket = io("http://localhost:5000");
 
 export default function Chat({ resId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [userId, setUserId] = useState(""); // State to hold the userId
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     // Fetch userId from localStorage and decode the token
@@ -33,7 +33,7 @@ export default function Chat({ resId }) {
     const fetchMessages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/messages?recipient=${userId}` // Use resId as the recipient
+          `http://localhost:5000/api/messages?recipient=${userId}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -60,7 +60,7 @@ export default function Chat({ resId }) {
       clearInterval(intervalId);
       socket.disconnect();
     };
-  }, [resId]); // Include resId in the dependency array to fetch messages when resId changes
+  }, [resId]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") {
@@ -83,7 +83,6 @@ export default function Chat({ resId }) {
       });
 
       if (response.ok) {
-        // Update messages state with the new message immediately after sending
         const newMessageObj = {
           content: newMessage,
           sender: "You",
@@ -116,9 +115,10 @@ export default function Chat({ resId }) {
         <Grid item xs={12}>
           <Paper style={{ padding: 20 }}>
             <Typography variant="h5" gutterBottom>
-              Chat
+              Chat With Environment Activist Regarding this project. Get More
+              clarifications.
             </Typography>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h6" gutterBottom>
               User ID: {userId}
             </Typography>
             <List style={{ maxHeight: 300, overflow: "auto" }}>
