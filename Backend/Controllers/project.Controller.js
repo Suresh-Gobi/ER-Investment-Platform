@@ -255,6 +255,39 @@ const updatePaymentDetails = async (req, res) => {
   }
 };
 
+const getTotalPaidAmount = async (req, res) => {
+  try {
+    // Extract the token from the request headers
+    const token = req.headers.authorization.split(" ")[1];
+
+    // Verify and decode the token to get the user ID
+    const decodedToken = jwt.verify(token, secretKey);
+    const userId = decodedToken.userId;
+
+    // Find projects based on the user's ID from the decoded token
+    const projects = await Project.find({ user: userId });
+
+    // Initialize totalPaidAmount
+    let totalPaidAmount = 0;
+
+    // Iterate through projects and accumulate the paidAmount
+    for (const project of projects) {
+      // Ensure paidAmount is a valid number
+      const paidAmount = parseFloat(project.paidAmount);
+      if (!isNaN(paidAmount)) {
+        totalPaidAmount += paidAmount;
+      }
+    }
+
+    // Send the total paid amount as a JSON response
+    res.status(200).json({ totalPaidAmount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 module.exports = {
   createProject,
   getProjects,
@@ -262,4 +295,5 @@ module.exports = {
   updateApprovalStatus,
   updateProjectStatusAndAmount,
   updatePaymentDetails,
+  getTotalPaidAmount,
 };

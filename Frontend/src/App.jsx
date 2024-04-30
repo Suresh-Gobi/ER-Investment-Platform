@@ -25,6 +25,8 @@ import AllProjects from "./Components/Investor/Menus/Project/AllProjects";
 import ChatInvestor from "./Components/Investor/ChatInvestor"
 import PaymentForm from "./Components/Payment/PaymentForm";
 import OngoingProject from "./Components/Investment/Menus/ProjectDetails/ongoingProject";
+import TotalAmount from "./Components/Investment/Menus/Payment/TotalAmount";
+import OnGoingProjectAmount from "./Components/Investment/Menus/Payment/OnGoingProjectAmount";
 
 // payment
 import Success from "./Components/Payment/Success";
@@ -53,6 +55,8 @@ function App() {
         <Route path="/getplant" element={<GetPlant />} />
         <Route path="/allprojects" element={<AllProjects />} />
         <Route path="/on" element={<OngoingProject />} />
+        <Route path="/total" element={<TotalAmount />} />
+        <Route path="/amount" element={<OnGoingProjectAmount />} />
 
         <Route path="/chat/:Id" element={<ChatInvestor />} />
         
