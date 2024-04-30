@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { TextField, Checkbox, Button, Grid, FormControlLabel } from '@mui/material';
 
 export default function Profile() {
   const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ export default function Profile() {
         formDataToSend,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach the JWT token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -67,26 +68,166 @@ export default function Profile() {
   return (
     <div>
       <h1>Profile</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
-        <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Address" required />
-        <input type="text" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone" required />
-        <input type="text" name="nic" value={formData.nic} onChange={handleChange} placeholder="NIC" required />
-        <input type="date" name="dob" value={formData.dob} onChange={handleChange} placeholder="Date of Birth" required />
-        <input type="text" name="nation" value={formData.nation} onChange={handleChange} placeholder="Nationality" required />
-        <input type="text" name="bankName" value={formData.bankName} onChange={handleChange} placeholder="Bank Name" required />
-        <input type="text" name="accountNumber" value={formData.accountNumber} onChange={handleChange} placeholder="Account Number" required />
-        <input type="text" name="branch" value={formData.branch} onChange={handleChange} placeholder="Branch" required />
-        <input type="text" name="bankCode" value={formData.bankCode} onChange={handleChange} placeholder="Bank Code" required />
-        <input type="text" name="shiftCode" value={formData.shiftCode} onChange={handleChange} placeholder="Shift Code" required />
-        <div>
-          <label>
-            Verified Account:
-            <input type="checkbox" name="verifiedAccount" checked={formData.verifiedAccount} onChange={(e) => setFormData({ ...formData, verifiedAccount: e.target.checked })} />
-          </label>
-        </div>
-        <input type="file" name="file" onChange={handleChange} required />
-        <button type="submit">Submit</button>
+        <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              label="Name"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              label="Address"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              label="Phone"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="nic"
+              value={formData.nic}
+              onChange={handleChange}
+              label="NIC"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="date"
+              name="dob"
+              value={formData.dob}
+              onChange={handleChange}
+              label="Date of Birth"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="nation"
+              value={formData.nation}
+              onChange={handleChange}
+              label="Nationality"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="bankName"
+              value={formData.bankName}
+              onChange={handleChange}
+              label="Bank Name"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="accountNumber"
+              value={formData.accountNumber}
+              onChange={handleChange}
+              label="Account Number"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="branch"
+              value={formData.branch}
+              onChange={handleChange}
+              label="Branch"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="bankCode"
+              value={formData.bankCode}
+              onChange={handleChange}
+              label="Bank Code"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="shiftCode"
+              value={formData.shiftCode}
+              onChange={handleChange}
+              label="Shift Code"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="verifiedAccount"
+                  checked={formData.verifiedAccount}
+                  onChange={(e) =>
+                    setFormData({ ...formData, verifiedAccount: e.target.checked })
+                  }
+                />
+              }
+              label="Verified Account"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              component="label"
+              htmlFor="fileInput"
+            >
+              Upload File
+              <input
+                type="file"
+                id="fileInput"
+                name="file"
+                onChange={handleChange}
+                required
+                style={{ display: 'none' }}
+              />
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </div>
   );

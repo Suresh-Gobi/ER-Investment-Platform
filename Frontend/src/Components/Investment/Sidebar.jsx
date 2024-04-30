@@ -32,6 +32,7 @@ import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
 import Profile from "./Menus/Profile";
 import Chat from "./Menus/Chat";
+import Payment from "./Menus/Payment";
 
 const drawerWidth = 240;
 
@@ -103,7 +104,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = useState("Overview"); // Set initial value to "Overview"
+  const [selectedItem, setSelectedItem] = useState("Overview");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -193,6 +194,7 @@ export default function MiniDrawer() {
         {selectedItem === "Projects" && <Projects />}
         {selectedItem === "Profile" && <Profile />}
         {selectedItem === "Chat" && <Chat />}
+        {selectedItem === "Payment" && <Payment />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>

@@ -31,7 +31,7 @@ export default function TotalAmount() {
 
   return (
     <div>
-      <h2>Total Amount of Projects:</h2>
+      <h2>Total Earnings</h2>
       {totalAmount !== null ? (
         <p>{`$${totalAmount}`}</p>
       ) : (

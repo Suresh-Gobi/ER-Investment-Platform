@@ -59,20 +59,30 @@ export default function MyProject() {
   return (
     <div>
       <br />
-      <h1>My Projects</h1>
+      <h1>My On-Going Projects</h1>
       <br />
       <Grid container spacing={3}>
         {projects
           .filter((project) => project.projectStatus === "Started")
           .map((project) => (
             <Grid item xs={12} sm={6} md={4} key={project._id}>
-              <Card fullWidth>
-                <CardContent>
+              <Card>
+                <CardContent style={{ position: "relative" }}>
                   <Typography variant="h5" component="h2">
                     {project.projectTitle}
                   </Typography>
                   <Typography color="textSecondary">
                     {project.projectCategory}
+                  </Typography>
+                  <Typography
+                    style={{
+                      position: "absolute",
+                      top: "5px",
+                      right: "5px",
+                    }}
+                  >
+                    Pending Balance to Pay:{" "}
+                    {calculatePendingBalance(selectedProject)}
                   </Typography>
                   <Button
                     variant="outlined"
@@ -102,7 +112,8 @@ export default function MyProject() {
 
           <Typography>{selectedProject?.InitialInvestment}</Typography>
           <Typography>
-            Estimated Total Investment Amount : {selectedProject?.EstimatedTotal}
+            Estimated Total Investment Amount :{" "}
+            {selectedProject?.EstimatedTotal}
           </Typography>
           <Typography>{selectedProject?.ExpectedRevenue}</Typography>
           <Typography>{selectedProject?.landDetails.landLocation}</Typography>
