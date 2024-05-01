@@ -150,6 +150,28 @@ const getProjects = async (req, res) => {
   }
 };
 
+const getInProjects = async (req, res) => {
+  try {
+    // Get the token from the request headers
+    const token = req.headers.authorization.split(" ")[1];
+
+    // Verify and decode the token to get the investor's ID
+    const decodedToken = jwt.verify(token, secretKey);
+    const investorId = decodedToken.id;
+
+    // Find projects based on the investor's ID from the decoded token
+    const projects = await Project.find({ investorId });
+
+    // Send the projects as a JSON response
+    res.status(200).json({ projects, investorId });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
 const getAllProjects = async (req, res) => {
   try {
     // Fetch all projects from the database
@@ -287,6 +309,40 @@ const getTotalPaidAmount = async (req, res) => {
   }
 };
 
+const getTotalInPaidAmount = async (req, res) => {
+  try {
+    // Extract the token from the request headers
+    const token = req.headers.authorization.split(" ")[1];
+
+    // Verify and decode the token to get the investor's ID
+    const decodedToken = jwt.verify(token, secretKey);
+    const investorId = decodedToken.id;
+
+    // Find projects based on the investor's ID from the decoded token
+    const projects = await Project.find({ investorId });
+
+    // Initialize totalPaidAmount
+    let totalPaidAmount = 0;
+
+    // Iterate through projects and accumulate the paidAmount
+    for (const project of projects) {
+      // Ensure paidAmount is a valid number
+      const paidAmount = parseFloat(project.paidAmount);
+      if (!isNaN(paidAmount)) {
+        totalPaidAmount += paidAmount;
+      }
+    }
+
+    // Send the total paid amount as a JSON response
+    res.status(200).json({ totalPaidAmount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
 
 module.exports = {
   createProject,
@@ -296,4 +352,6 @@ module.exports = {
   updateProjectStatusAndAmount,
   updatePaymentDetails,
   getTotalPaidAmount,
+  getInProjects,
+  getTotalInPaidAmount,
 };

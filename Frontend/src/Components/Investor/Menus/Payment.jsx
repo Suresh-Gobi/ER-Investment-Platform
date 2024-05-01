@@ -1,7 +1,10 @@
-import React from 'react'
+import React from "react";
+import TotalSpend from "./Payment/TotalSpend";
 
 export default function Payment() {
   return (
-    <div>Payment</div>
-  )
+    <>
+      <TotalSpend />
+    </>
+  );
 }

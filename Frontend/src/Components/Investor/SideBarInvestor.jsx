@@ -23,12 +23,14 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import OverviewIcon from "@mui/icons-material/Assessment"; 
-import ProjectsIcon from "@mui/icons-material/Work"; 
+import OverviewIcon from "@mui/icons-material/Assessment";
+import ProjectsIcon from "@mui/icons-material/Work";
 import ChatIcon from "@mui/icons-material/Chat";
-import PaymentIcon from "@mui/icons-material/Payment"; 
+import PaymentIcon from "@mui/icons-material/Payment";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Overview from "./Menus/Overviews";
+import OnProjects from "./Menus/OnProjects";
+import Payment from "./Menus/Payment";
 
 const drawerWidth = 240;
 
@@ -119,6 +121,10 @@ export default function MiniDrawer() {
     switch (text) {
       case "Overviews":
         return <OverviewIcon />;
+      case "Projects":
+        return <OverviewIcon />;
+      case "Payment":
+        return <OverviewIcon />;
       default:
         return null;
     }
@@ -158,11 +164,11 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Overviews"].map((text) => (
+          {["Overviews", "Projects", "Payment"].map((text) => (
             <ListItem
               key={text}
               button
-              onClick={() => handleMenuItemClick(text)} // Pass the handleMenuItemClick function
+              onClick={() => handleMenuItemClick(text)}
               sx={{ display: "block" }}
               selected={selectedItem === text}
             >
@@ -179,6 +185,8 @@ export default function MiniDrawer() {
         <DrawerHeader />
         {/* Render corresponding component based on selected item */}
         {selectedItem === "Overviews" && <Overview />}
+        {selectedItem === "Projects" && <OnProjects />}
+        {selectedItem === "Payment" && <Payment />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>
