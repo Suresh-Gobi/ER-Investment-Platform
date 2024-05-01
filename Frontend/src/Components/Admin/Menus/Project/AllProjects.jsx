@@ -83,7 +83,7 @@ export default function AllProjects() {
 
   return (
     <Container maxWidth="md">
-      <Typography variant="h1" align="center" gutterBottom>
+      <Typography variant="h6" align="center" gutterBottom>
         All Projects
       </Typography>
       <List>

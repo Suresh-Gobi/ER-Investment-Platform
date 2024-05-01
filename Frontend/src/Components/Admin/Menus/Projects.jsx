@@ -12,7 +12,7 @@ export default function Projects() {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" style={{marginRight: '150vh'}}>
       <Tabs
         value={selectedTab}
         onChange={handleTabChange}
