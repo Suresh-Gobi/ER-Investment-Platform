@@ -15,7 +15,7 @@ const TotalPaidAmount = () => {
           },
         });
 
-        console.log('Response from backend:', response.data); // Log the response data
+        console.log('Response from backend:', response.data);
 
         setTotalPaidAmount(response.data.totalPaidAmount);
       } catch (error) {

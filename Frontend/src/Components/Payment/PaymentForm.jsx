@@ -109,7 +109,7 @@ export default function PaymentForm({
             <br />
             <br />
             <Button variant="contained" onClick={checkout}>
-              Start the project
+              Pay Now
             </Button>
           </Grid>
         </Grid>
