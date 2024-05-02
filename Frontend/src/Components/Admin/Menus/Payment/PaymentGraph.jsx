@@ -28,7 +28,7 @@ export default function PaymentGraph() {
           expectedRevenue: parseInt(project.expectedRevenue),
         }));
 
-        console.log('Formatted Chart Data:', chartData); // Debug logging to check formatted data
+        console.log('Formatted Chart Data:', chartData);
 
         // Updating state with the formatted data
         setProjectData(chartData);

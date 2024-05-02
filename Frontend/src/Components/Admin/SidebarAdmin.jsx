@@ -32,6 +32,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
 import Payment from "./Menus/Payment";
+import Plant from "./Menus/Plant";
 
 const drawerWidth = 240;
 
@@ -126,6 +127,8 @@ export default function MiniDrawer() {
         return <OverviewIcon />;
       case "Payment":
         return <OverviewIcon />;
+      case "Plant":
+        return <OverviewIcon />;
       default:
         return null;
     }
@@ -165,7 +168,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Overviews", "Projects", "Payment"].map((text) => (
+          {["Overviews", "Projects", "Payment", "Plant"].map((text) => (
             <ListItem
               key={text}
               button
@@ -188,6 +191,7 @@ export default function MiniDrawer() {
         {selectedItem === "Overviews" && <Overview />}
         {selectedItem === "Projects" && <Projects />}
         {selectedItem === "Payment" && <Payment />}
+        {selectedItem === "Plant" && <Plant />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>

@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {
+  TextField,
+  TextareaAutosize,
+  Button,
+  Grid,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 
 export default function PlantManage() {
   const [formData, setFormData] = useState({
@@ -18,6 +29,8 @@ export default function PlantManage() {
     suitableLocations: '',
     plantImage: null,
   });
+
+  const [openModal, setOpenModal] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,136 +92,188 @@ export default function PlantManage() {
     }
   };
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div>
-      <h1>Create Plant</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="plantName">Plant Name:</label>
-        <input
-          type="text"
-          id="plantName"
-          name="plantName"
-          value={formData.plantName}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="plantDescription">Plant Description:</label>
-        <textarea
-          id="plantDescription"
-          name="plantDescription"
-          value={formData.plantDescription}
-          onChange={handleChange}
-        ></textarea>
-
-        <label htmlFor="plantSpecies">Plant Species:</label>
-        <input
-          type="text"
-          id="plantSpecies"
-          name="plantSpecies"
-          value={formData.plantSpecies}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="scientificName">Scientific Name:</label>
-        <input
-          type="text"
-          id="scientificName"
-          name="scientificName"
-          value={formData.scientificName}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="temperatureRangeMin">Temperature Range (Min):</label>
-        <input
-          type="number"
-          id="temperatureRangeMin"
-          name="temperatureRangeMin"
-          value={formData.temperatureRangeMin}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="temperatureRangeMax">Temperature Range (Max):</label>
-        <input
-          type="number"
-          id="temperatureRangeMax"
-          name="temperatureRangeMax"
-          value={formData.temperatureRangeMax}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="humidityRangeMin">Humidity Range (Min):</label>
-        <input
-          type="number"
-          id="humidityRangeMin"
-          name="humidityRangeMin"
-          value={formData.humidityRangeMin}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="humidityRangeMax">Humidity Range (Max):</label>
-        <input
-          type="number"
-          id="humidityRangeMax"
-          name="humidityRangeMax"
-          value={formData.humidityRangeMax}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="growingTimeLimit">Growing Time Limit:</label>
-        <input
-          type="number"
-          id="growingTimeLimit"
-          name="growingTimeLimit"
-          value={formData.growingTimeLimit}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="plantsPerSquareMeter">Plants Per Square Meter:</label>
-        <input
-          type="number"
-          id="plantsPerSquareMeter"
-          name="plantsPerSquareMeter"
-          value={formData.plantsPerSquareMeter}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="marketRatePerKg">Market Rate Per Kg:</label>
-        <input
-          type="number"
-          id="marketRatePerKg"
-          name="marketRatePerKg"
-          value={formData.marketRatePerKg}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="investmentPerSquareMeter">Investment Per Square Meter:</label>
-        <input
-          type="number"
-          id="investmentPerSquareMeter"
-          name="investmentPerSquareMeter"
-          value={formData.investmentPerSquareMeter}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="suitableLocations">Suitable Locations:</label>
-        <input
-          type="text"
-          id="suitableLocations"
-          name="suitableLocations"
-          value={formData.suitableLocations}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="plantImage">Plant Image:</label>
-        <input
-          type="file"
-          id="plantImage"
-          name="plantImage"
-          onChange={handleFileChange}
-        />
-
-        <button type="submit">Create Plant</button>
-      </form>
+      <Button variant="contained" color="primary" onClick={handleOpenModal}>
+        Create Plant Record
+      </Button>
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Create Plant</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="plantName"
+              name="plantName"
+              label="Plant Name"
+              value={formData.plantName}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="plantDescription"
+              name="plantDescription"
+              label="Plant Description"
+              value={formData.plantDescription}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="plantSpecies"
+              name="plantSpecies"
+              label="Plant Species"
+              value={formData.plantSpecies}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="scientificName"
+              name="scientificName"
+              label="Scientific Name"
+              value={formData.scientificName}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="temperatureRangeMin"
+              name="temperatureRangeMin"
+              label="Temperature Range (Min)"
+              type="number"
+              value={formData.temperatureRangeMin}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="temperatureRangeMax"
+              name="temperatureRangeMax"
+              label="Temperature Range (Max)"
+              type="number"
+              value={formData.temperatureRangeMax}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="humidityRangeMin"
+              name="humidityRangeMin"
+              label="Humidity Range (Min)"
+              type="number"
+              value={formData.humidityRangeMin}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="humidityRangeMax"
+              name="humidityRangeMax"
+              label="Humidity Range (Max)"
+              type="number"
+              value={formData.humidityRangeMax}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="growingTimeLimit"
+              name="growingTimeLimit"
+              label="Growing Time Limit"
+              type="number"
+              value={formData.growingTimeLimit}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="plantsPerSquareMeter"
+              name="plantsPerSquareMeter"
+              label="Plants Per Square Meter"
+              type="number"
+              value={formData.plantsPerSquareMeter}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="marketRatePerKg"
+              name="marketRatePerKg"
+              label="Market Rate Per Kg"
+              type="number"
+              value={formData.marketRatePerKg}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="investmentPerSquareMeter"
+              name="investmentPerSquareMeter"
+              label="Investment Per Square Meter"
+              type="number"
+              value={formData.investmentPerSquareMeter}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="suitableLocations"
+              name="suitableLocations"
+              label="Suitable Locations"
+              value={formData.suitableLocations}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <input
+              id="plantImage"
+              name="plantImage"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <label htmlFor="plantImage">
+              <Button component="span" variant="outlined">
+                Upload Plant Image
+              </Button>
+            </label>
+          </Grid>
+        </Grid>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary" variant="contained">
+            Create Plant
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

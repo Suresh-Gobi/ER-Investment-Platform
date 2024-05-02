@@ -21,6 +21,7 @@
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
     "chartjs-gauge": "^0.3.0",
+    "faker": "^6.6.6",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-d3-speedometer": "^2.2.1",
