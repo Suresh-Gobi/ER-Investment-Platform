@@ -57,13 +57,6 @@ const createPlant = async (req, res) => {
 
 const getAllPlants = async (req, res) => {
   try {
-    // Extract the token from the request headers
-    const token = req.headers.authorization.split(" ")[1];
-
-    // Verify and decode the token to get the user ID
-    const decodedToken = jwt.verify(token, secretKey);
-    const userId = decodedToken.userId;
-
     const plants = await Plant.find();
     res.status(200).json({ message: "Plants retrieved successfully", plants });
   } catch (error) {
@@ -161,10 +154,20 @@ const deletePlant = async (req, res) => {
   }
 };
 
+const getAllEPlants = async (req, res) => {
+  try {
+    const plants = await Plant.find();
+    res.status(200).json(plants);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to get plant details', error: error.message });
+  }
+};
+
 module.exports = {
   createPlant,
   getAllPlants,
   filterPlantsByHumidity,
   updatePlant,
   deletePlant,
+  getAllEPlants,
 };

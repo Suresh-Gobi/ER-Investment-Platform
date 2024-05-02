@@ -6,6 +6,7 @@ const {
   filterPlantsByHumidity,
   updatePlant,
   deletePlant,
+  getAllEPlants,
 } = require("../Controllers/plant.Controller");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -16,5 +17,6 @@ router.get("/plantget", getAllPlants);
 router.post("/filterPlantsByHumidity", filterPlantsByHumidity);
 router.put("/plantupdate/:id", updatePlant);
 router.delete("/plantdelete/:id", deletePlant);
+router.get("/getplants", getAllEPlants);
 
 module.exports = router;
