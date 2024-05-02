@@ -333,6 +333,28 @@ const getTotalInPaidAmount = async (req, res) => {
   }
 };
 
+const getAllProjectsExpectedRevenue = async (req, res) => {
+  try {
+    // Fetch all projects from the database
+    const projects = await Project.find();
+
+    // Calculate expected revenue for each project
+    const projectsWithExpectedRevenue = projects.map(project => ({
+      _id: project._id,
+      projectTitle: project.projectTitle,
+      projectCategory: project.projectCategory,
+      EstimatedTotal: project.EstimatedTotal,
+      paidAmount: project.paidAmount,
+      expectedRevenue: parseInt(project.EstimatedTotal) - parseInt(project.paidAmount)
+    }));
+
+    // Send the projects with expected revenue as response
+    res.status(200).json(projectsWithExpectedRevenue);
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 
 module.exports = {
@@ -345,4 +367,5 @@ module.exports = {
   getTotalPaidAmount,
   getInProjects,
   getTotalInPaidAmount,
+  getAllProjectsExpectedRevenue,
 };

@@ -31,7 +31,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
-import Payment from "./Menus/Payment/TotalInvestment";
+import Payment from "./Menus/Payment";
 
 const drawerWidth = 240;
 
