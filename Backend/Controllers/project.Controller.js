@@ -311,36 +311,27 @@ const getTotalPaidAmount = async (req, res) => {
 
 const getTotalInPaidAmount = async (req, res) => {
   try {
-    // Extract the token from the request headers
-    const token = req.headers.authorization.split(" ")[1];
+    // Aggregate pipeline to calculate the total paidAmount
+    const aggregateResult = await Project.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalPaidAmount: { $sum: { $toDouble: "$paidAmount" } }, // Assuming paidAmount is stored as a String and needs to be converted to a number
+        },
+      },
+    ]);
 
-    // Verify and decode the token to get the investor's ID
-    const decodedToken = jwt.verify(token, secretKey);
-    const investorId = decodedToken.id;
-
-    // Find projects based on the investor's ID from the decoded token
-    const projects = await Project.find({ investorId });
-
-    // Initialize totalPaidAmount
-    let totalPaidAmount = 0;
-
-    // Iterate through projects and accumulate the paidAmount
-    for (const project of projects) {
-      // Ensure paidAmount is a valid number
-      const paidAmount = parseFloat(project.paidAmount);
-      if (!isNaN(paidAmount)) {
-        totalPaidAmount += paidAmount;
-      }
+    if (aggregateResult.length > 0) {
+      const totalAmount = aggregateResult[0].totalPaidAmount;
+      res.json({ totalPaidAmount: totalAmount });
+    } else {
+      res.status(404).json({ error: "No projects found." });
     }
-
-    // Send the total paid amount as a JSON response
-    res.status(200).json({ totalPaidAmount });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error calculating total paid amount:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 
 
