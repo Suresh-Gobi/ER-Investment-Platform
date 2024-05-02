@@ -33,6 +33,7 @@ import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
 import Payment from "./Menus/Payment";
 import Plant from "./Menus/Plant";
+import Activist from "./Menus/Activist";
 
 const drawerWidth = 240;
 
@@ -129,6 +130,8 @@ export default function MiniDrawer() {
         return <OverviewIcon />;
       case "Plant":
         return <OverviewIcon />;
+      case "Activist":
+        return <OverviewIcon />;
       default:
         return null;
     }
@@ -168,21 +171,23 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Overviews", "Projects", "Payment", "Plant"].map((text) => (
-            <ListItem
-              key={text}
-              button
-              onClick={() => handleMenuItemClick(text)}
-              sx={{ display: "block" }}
-              selected={selectedItem === text}
-            >
-              <ListItemIcon>
-                {renderIcon(text)} {/* Render the appropriate icon */}
-              </ListItemIcon>
-              {open && <ListItemText primary={text} />}{" "}
-              {/* Conditionally render the text based on open state */}
-            </ListItem>
-          ))}
+          {["Overviews", "Projects", "Payment", "Plant", "Activist"].map(
+            (text) => (
+              <ListItem
+                key={text}
+                button
+                onClick={() => handleMenuItemClick(text)}
+                sx={{ display: "block" }}
+                selected={selectedItem === text}
+              >
+                <ListItemIcon>
+                  {renderIcon(text)} {/* Render the appropriate icon */}
+                </ListItemIcon>
+                {open && <ListItemText primary={text} />}{" "}
+                {/* Conditionally render the text based on open state */}
+              </ListItem>
+            )
+          )}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -192,6 +197,7 @@ export default function MiniDrawer() {
         {selectedItem === "Projects" && <Projects />}
         {selectedItem === "Payment" && <Payment />}
         {selectedItem === "Plant" && <Plant />}
+        {selectedItem === "Activist" && <Activist />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>

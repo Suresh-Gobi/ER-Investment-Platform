@@ -77,4 +77,11 @@ router.post("/admin/login", authController.adminLogin);
 
 router.post("/investor/login", authController.loginAsInvestor);
 
+//CRUD ADMIN PANEL
+router.get("/userdetails", authController.getAllUsers);
+
+router.delete("/userdetailsdelete", authController.deleteUser);
+
+router.put("/userdetailsupdate", authController.updateUser);
+
 module.exports = router;

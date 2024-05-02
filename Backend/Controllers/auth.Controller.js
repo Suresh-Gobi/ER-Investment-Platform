@@ -166,88 +166,138 @@ exports.adminSignup = async (req, res) => {
 };
 
 exports.adminLogin = async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      // Check if the admin exists
-      const admin = await Admin.findOne({ email });
-      if (!admin) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-  
-      // Compare the password
-      const isMatch = await bcrypt.compare(password, admin.password);
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-  
-      // Generate JWT token with admin details
-      const payload = {
-        admin: {
-          id: admin.id,
-          username: admin.username,
-          email: admin.email,
-        },
-      };
-  
-      jwt.sign(
-        payload,
-        process.env.JWT_SECRET, // Your JWT secret key
-        { expiresIn: '1h' }, // Token expiration time
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({ token });
-        }
-      );
-    } catch (error) {
-      res.status(500).json({ message: 'Something went wrong' });
-    }
-  };
+  const { email, password } = req.body;
 
-
-  //Investor 
-  exports.loginAsInvestor = async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      // Check if the user exists in the database
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-  
-      // Check if the provided password matches the hashed password in the database
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-  
-      // Check if the user's email is verified
-      if (!user.isVerified) {
-        return res.status(403).json({ message: "Email is not verified" });
-      }
-  
-      // Check if the user is an investor
-      if (user.role !== 'investor') {
-        return res.status(403).json({ message: "You are not authorized to log in as an investor" });
-      }
-  
-      // Generate JWT token with user data
-      const tokenPayload = {
-        id: user._id,
-        displayName: user.displayName,
-        email: user.email,
-        role: user.role,
-        isVerified: user.isVerified,
-      };
-  
-      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      });
-  
-      res.status(200).json({ token });
-    } catch (error) {
-      console.error("Error in login:", error);
-      res.status(500).json({ error: "Internal server error" });
+  try {
+    // Check if the admin exists
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
-  };
+
+    // Compare the password
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Generate JWT token with admin details
+    const payload = {
+      admin: {
+        id: admin.id,
+        username: admin.username,
+        email: admin.email,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET, // Your JWT secret key
+      { expiresIn: "1h" }, // Token expiration time
+      (err, token) => {
+        if (err) throw err;
+        res.status(200).json({ token });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+//Investor
+exports.loginAsInvestor = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if the user exists in the database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Check if the provided password matches the hashed password in the database
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Check if the user's email is verified
+    if (!user.isVerified) {
+      return res.status(403).json({ message: "Email is not verified" });
+    }
+
+    // Check if the user is an investor
+    if (user.role !== "investor") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to log in as an investor" });
+    }
+
+    // Generate JWT token with user data
+    const tokenPayload = {
+      id: user._id,
+      displayName: user.displayName,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+    };
+
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error("Error in login:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// CRUD OPERATION FOR ADMIN PANEL
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Controller to update user details
+exports.updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { displayName, email, role } = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { displayName, email, role },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Controller to delete user
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
