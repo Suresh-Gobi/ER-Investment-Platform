@@ -58,11 +58,25 @@ export default function Profile() {
         }
       );
       console.log(response.data);
+
+
+      alert('File uploaded successfully!');
+      
       // Add any additional handling or redirect logic here
     } catch (error) {
-      console.error(error);
-      // Handle error
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error('Server Error:', error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Network Error:', error.request);
+      } else {
+        // Something else happened while setting up the request
+        console.error('Error:', error.message);
+      }
+      // Handle error display or any other logic
     }
+    
   };
 
   return (
@@ -228,7 +242,7 @@ export default function Profile() {
               Submit
             </Button>
             <div>
-              <p>Submitted you documents</p>
+              {/* <p>Submitted you documents</p> */}
             </div>
           </Grid>
         </Grid>

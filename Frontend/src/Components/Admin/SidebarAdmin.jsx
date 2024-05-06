@@ -28,6 +28,7 @@ import ProjectsIcon from "@mui/icons-material/Work";
 import ChatIcon from "@mui/icons-material/Chat";
 import PaymentIcon from "@mui/icons-material/Payment";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
@@ -122,16 +123,16 @@ export default function MiniDrawer() {
   // Function to render icon based on menu item
   const renderIcon = (text) => {
     switch (text) {
-      case "Overviews":
+      case "Overview":
         return <OverviewIcon />;
       case "Projects":
-        return <OverviewIcon />;
+        return <ProjectsIcon />;
       case "Payment":
-        return <OverviewIcon />;
+        return <PaymentIcon />;
       case "Plant":
-        return <OverviewIcon />;
+        return <InboxIcon />;
       case "Activist":
-        return <OverviewIcon />;
+        return <MailIcon />;
       default:
         return null;
     }
@@ -157,6 +158,14 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap component="div">
             Earth Restoration Investment Platform | Admin Dashboard
           </Typography>
+          <IconButton
+            color="white"
+            aria-label="logout"
+            edge="end"
+            sx={{ marginLeft: "auto" }}
+          >
+            <LogoutIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

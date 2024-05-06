@@ -82,4 +82,16 @@ const uploadDocument = async (req, res) => {
   }
 };
 
-module.exports = { upload, uploadDocument };
+const getAllDetails = async (req, res) => {
+  try {
+    const uploads = await Upload.find();
+    res.status(200).json(uploads);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+module.exports = { upload, uploadDocument, getAllDetails };

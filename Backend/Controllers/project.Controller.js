@@ -494,6 +494,23 @@ const getTotalPaidProjectAmount = async (req, res) => {
   }
 };
 
+const updateDetails = async (req, res) => {
+  const projectId = req.params.id; // Assuming the project ID is passed in the request URL
+  const updates = req.body; // Assuming the updates are sent in the request body
+
+  try {
+    const project = await Project.findByIdAndUpdate(projectId, updates, { new: true });
+
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    return res.status(200).json({ message: 'Project details updated successfully', project });
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error', message: error.message });
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
@@ -511,4 +528,5 @@ module.exports = {
   getTotalApprovedProjects,
   getTotalNotApprovedProjects,
   getTotalPaidProjectAmount,
+  updateDetails,
 };

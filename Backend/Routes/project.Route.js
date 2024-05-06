@@ -17,6 +17,7 @@ const {
   getTotalApprovedProjects,
   getTotalNotApprovedProjects,
   getTotalPaidProjectAmount,
+  updateDetails,
 } = require("../Controllers/project.Controller");
 const multer = require("multer");
 
@@ -54,5 +55,6 @@ router.get("/totapproved", getTotalApprovedProjects);
 router.get("/totnotapproved", getTotalNotApprovedProjects);
 
 router.get("/getTotalPaidProjectAmount", getTotalPaidProjectAmount);
+router.put("/updateDetails/:id", updateDetails);
 
 module.exports = router;
