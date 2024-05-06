@@ -11,6 +11,15 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 
 export default function MyProject() {
   const [projects, setProjects] = useState([]);
@@ -50,51 +59,51 @@ export default function MyProject() {
     setOpenDialog(false);
   };
 
-  const calculatePendingBalance = (project) => {
-    const estimatedTotal = parseFloat(project?.EstimatedTotal) || 0;
-    const paidAmount = parseFloat(project?.paidAmount) || 0;
-    return estimatedTotal - paidAmount;
-  };
-
   return (
     <div>
       <br />
-      <h1>My On-Going Projects</h1>
+      <Card className="container" style={{padding: '20px'}}>
+        <Typography variant="subtitle1">
+          Total Projects Count : {projects.length}
+        </Typography>
+      </Card>
       <br />
       <Grid container spacing={3}>
-        {projects
-          .filter((project) => project.projectStatus === "Started")
-          .map((project) => (
-            <Grid item xs={12} sm={6} md={4} key={project._id}>
-              <Card>
-                <CardContent style={{ position: "relative" }}>
-                  <Typography variant="h5" component="h2">
-                    {project.projectTitle}
-                  </Typography>
-                  <Typography color="textSecondary">
-                    {project.projectCategory}
-                  </Typography>
-                  <Typography
-                    style={{
-                      position: "absolute",
-                      top: "5px",
-                      right: "5px",
-                    }}
-                  >
-                    Pending Balance to Pay:{" "}
-                    {calculatePendingBalance(selectedProject)}
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleViewProject(project)}
-                  >
-                    View Project
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+        {projects.map((project) => (
+          <Grid item xs={12} sm={6} md={4} key={project._id}>
+            <Card>
+              <CardContent>
+                <Typography variant="h5" component="h2">
+                  {project.projectTitle}
+                </Typography>
+                <Typography color="textSecondary">
+                  {project.projectCategory}
+                </Typography>
+                <Typography variant="body2" component="p">
+                  {project.projectDescription}
+                </Typography>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleViewProject(project)}
+                >
+                  View Project
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
+      <br/>
+
+      <LineChart width={600} height={300} data={projects}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="projectTitle" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="EstimatedTotal" stroke="#8884d8" />
+        <Line type="monotone" dataKey="ExpectedRevenue" stroke="#82ca9d" />
+      </LineChart>
 
       <Dialog
         open={openDialog}
@@ -111,10 +120,7 @@ export default function MyProject() {
           <Typography>{selectedProject?.InvestmentRange}</Typography>
 
           <Typography>{selectedProject?.InitialInvestment}</Typography>
-          <Typography>
-            Estimated Total Investment Amount :{" "}
-            {selectedProject?.EstimatedTotal}
-          </Typography>
+          <Typography>{selectedProject?.EstimatedTotal}</Typography>
           <Typography>{selectedProject?.ExpectedRevenue}</Typography>
           <Typography>{selectedProject?.landDetails.landLocation}</Typography>
 
@@ -128,23 +134,6 @@ export default function MyProject() {
             >
               Download Document
             </Button>
-          </Typography>
-
-          <Typography gutterBottom variant="h6">
-            Project Status Details
-          </Typography>
-          <Typography>
-            Project Status: {selectedProject?.projectStatus}
-          </Typography>
-
-          <Typography>Paid Amount: {selectedProject?.paidAmount}</Typography>
-          <Typography>Investor ID: {selectedProject?.investorId}</Typography>
-          <Typography>Start Date: {selectedProject?.startDate}</Typography>
-          <Typography>End Date: {selectedProject?.endDate}</Typography>
-          <Typography>Duration: {selectedProject?.duration}</Typography>
-          <Typography>Milestone: {selectedProject?.mileston}</Typography>
-          <Typography>
-            Pending Balance to Pay: {calculatePendingBalance(selectedProject)}
           </Typography>
 
           <Typography>{selectedProject?.landDetails.approved}</Typography>

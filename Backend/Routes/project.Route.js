@@ -11,6 +11,12 @@ const {
   getInProjects,
   getTotalInPaidAmount,
   getAllProjectsExpectedRevenue,
+  updateProjectDetails,
+  getTotalProjects,
+  getTotalStartedProjects,
+  getTotalApprovedProjects,
+  getTotalNotApprovedProjects,
+  getTotalPaidProjectAmount,
 } = require("../Controllers/project.Controller");
 const multer = require("multer");
 
@@ -39,5 +45,14 @@ router.get("/projectgetinvestor", getInProjects);
 router.get("/totalamount", getTotalPaidAmount);
 router.get("/totinvestor", getTotalInPaidAmount);
 router.get("/expectedAmount", getAllProjectsExpectedRevenue);
+
+router.put("/projectupdate", updateProjectDetails);
+router.get("/gettotalprojects", getTotalProjects);
+router.get("/totalprojectcount", getTotalStartedProjects);
+
+router.get("/totapproved", getTotalApprovedProjects);
+router.get("/totnotapproved", getTotalNotApprovedProjects);
+
+router.get("/getTotalPaidProjectAmount", getTotalPaidProjectAmount);
 
 module.exports = router;

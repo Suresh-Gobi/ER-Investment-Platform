@@ -97,7 +97,7 @@ export default function PaymentForm({
             <Typography>Quantity: {quantity}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography>Total Amount: ${finalAmount}</Typography>
+            <Typography>Total Amount: LKR{finalAmount}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="secondary" onClick={decrement}>

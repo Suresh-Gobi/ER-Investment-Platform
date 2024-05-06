@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Typography,
   Button,
@@ -8,16 +8,16 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@mui/material';
+} from "@mui/material";
 
 export default function Activist() {
   const [users, setUsers] = useState([]);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editedUserData, setEditedUserData] = useState({
-    id: '',
-    displayName: '',
-    email: '',
-    role: '',
+    id: "",
+    displayName: "",
+    email: "",
+    role: "",
   });
 
   useEffect(() => {
@@ -26,10 +26,12 @@ export default function Activist() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/auth/userdetails');
+      const response = await axios.get(
+        "http://localhost:5000/auth/userdetails"
+      );
       setUsers(response.data);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   };
 
@@ -64,7 +66,7 @@ export default function Activist() {
       fetchUsers(); // Refetch the updated user data
       setOpenEditDialog(false); // Close the edit dialog
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     }
   };
 
@@ -73,25 +75,36 @@ export default function Activist() {
       await axios.delete(`http://localhost:5000/auth/userdetailsdelete/${id}`);
       fetchUsers(); // Refetch the updated user data after deletion
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
     }
   };
 
   return (
     <div>
-      <Typography variant="h3" gutterBottom>
-        Activist
+      <Typography variant="h6" gutterBottom>
+        User Management
       </Typography>
-      <ul>
+      <ul style={{ listStyleType: "none", padding: 0 }}>
         {users.map((user) => (
-          <li key={user._id}>
-            {user.displayName} - {user.email} - {user.role}
-            <Button variant="contained" onClick={() => handleEditClick(user)}>
-              Edit
-            </Button>
-            <Button variant="contained" color="error" onClick={() => handleDeleteUser(user._id)}>
-              Delete
-            </Button>
+          <li
+            key={user._id}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <span>
+              {user.displayName} - {user.email} - {user.role}
+            </span>
+            <span>
+              <Button variant="contained" onClick={() => handleEditClick(user)}>
+                Edit
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDeleteUser(user._id)}
+              >
+                Delete
+              </Button>
+            </span>
           </li>
         ))}
       </ul>

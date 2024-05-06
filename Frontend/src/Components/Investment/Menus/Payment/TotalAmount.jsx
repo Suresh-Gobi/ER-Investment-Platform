@@ -33,7 +33,7 @@ export default function TotalAmount() {
     <div>
       <h2>Total Earnings</h2>
       {totalAmount !== null ? (
-        <p>{`$${totalAmount}`}</p>
+        <p>{`LKR 1000. ${totalAmount}`}</p>
       ) : (
         <p>Loading...</p>
       )}

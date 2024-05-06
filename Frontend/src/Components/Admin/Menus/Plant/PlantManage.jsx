@@ -265,6 +265,11 @@ export default function PlantManage() {
         </Grid>
           </form>
         </DialogContent>
+        {/* <div>
+            <p>
+            Plant created successfully
+            </p>
+          </div> */}
         <DialogActions>
           <Button onClick={handleCloseModal} color="primary">
             Cancel
@@ -272,6 +277,7 @@ export default function PlantManage() {
           <Button onClick={handleSubmit} color="primary" variant="contained">
             Create Plant
           </Button>
+          
         </DialogActions>
       </Dialog>
     </div>

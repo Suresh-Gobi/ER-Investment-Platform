@@ -11,13 +11,47 @@ import {
   DialogContent,
   DialogActions,
   Chip,
+  TextField,
 } from "@mui/material";
 import ReactSpeedometer from "react-d3-speedometer/slim";
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 export default function MyProject() {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+
+  // State variables for editable fields
+  const [editedStartDate, setEditedStartDate] = useState("");
+  const [editedEndDate, setEditedEndDate] = useState("");
+  const [editedDuration, setEditedDuration] = useState("");
+  const [editedMilestone, setEditedMilestone] = useState("");
+  const [editedComments, setEditedComments] = useState("");
+
+  // Function to update project details
+  const updateProjectDetails = async (updatedData) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        "http://localhost:5000/api/project/projectupdate",
+        updatedData,
+        config
+      );
+
+      console.log("Project details updated:", response.data);
+      // Optionally, update the local state or perform any actions after successful update
+    } catch (error) {
+      console.error("Error updating project details:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -50,6 +84,25 @@ export default function MyProject() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleUpdateProjectDetails = async () => {
+    // Define the updated data based on edited values
+    const updatedData = {
+      projectId: selectedProject?._id,
+      startDate: editedStartDate,
+      endDate: editedEndDate,
+      duration: editedDuration,
+      mileston: editedMilestone,
+      comments: editedComments,
+      // Add other fields as needed
+    };
+
+    // Call the updateProjectDetails function with the updated data
+    await updateProjectDetails(updatedData);
+    // Optionally, update the local state or perform any actions after successful update
+    // For example, close the dialog
+    handleCloseDialog();
   };
 
   return (
@@ -100,6 +153,7 @@ export default function MyProject() {
                   <Typography gutterBottom variant="h6">
                     Project Details
                   </Typography>
+
                   <Typography>
                     Project Description: {selectedProject?.projectDescription}
                   </Typography>
@@ -197,6 +251,7 @@ export default function MyProject() {
                   <Typography gutterBottom variant="h6">
                     Project Status Details
                   </Typography>
+                  <Button>Update Status</Button>
                   <Typography>
                     Project Status: {selectedProject?.projectStatus}
                   </Typography>
@@ -215,6 +270,46 @@ export default function MyProject() {
                     Milestone: {selectedProject?.mileston}
                   </Typography>
                   <Typography>Comments: {selectedProject?.comments}</Typography>
+                  <br />
+                  <div>
+                    <TextField
+                      label="Start Date"
+                      value={editedStartDate}
+                      onChange={(e) => setEditedStartDate(e.target.value)}
+                    />
+                    <TextField
+                      label="End Date"
+                      value={editedEndDate}
+                      onChange={(e) => setEditedEndDate(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                  <TextField
+                    label="Duration"
+                    value={editedDuration}
+                    onChange={(e) => setEditedDuration(e.target.value)}
+                  />
+                  <TextField
+                    label="Milestone"
+                    value={editedMilestone}
+                    onChange={(e) => setEditedMilestone(e.target.value)}
+                  />
+                  </div>
+                  <div>
+                  <TextField
+                    label="Comments"
+                    multiline
+                    rows={4}
+                    value={editedComments}
+                    onChange={(e) => setEditedComments(e.target.value)}
+                  />
+                  </div>
+
+                  {/* Update button */}
+                  <Button onClick={handleUpdateProjectDetails}>
+                    Update Project Details
+                  </Button>
                 </CardContent>
               </Card>
             </Grid>

@@ -73,7 +73,7 @@ export default function MyProject() {
                     <Chip label={project.projectStatus} />
                   </Typography>
                   <Typography variant="body2" component="p">
-                    Pending Amount to Pay: $
+                    Pending Amount to Pay: LKR
                     {project.EstimatedTotal - project.paidAmount}
                   </Typography>
                   <Button

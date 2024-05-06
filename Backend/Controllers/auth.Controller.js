@@ -301,3 +301,35 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getTotalAmounts = async (req, res) => {
+  try {
+    // Aggregate pipeline to calculate total amounts for investors and activists
+    const aggregateResult = await User.aggregate([
+      {
+        $group: {
+          _id: "$role", // Group by role (investor, activist)
+          totalAmount: { $sum: 1 }, // Count the number of documents in each group
+        },
+      },
+    ]);
+
+    // Extract total amounts for investors and activists from the aggregate result
+    let totalInvestors = 0;
+    let totalActivists = 0;
+
+    aggregateResult.forEach((result) => {
+      if (result._id === "investor") {
+        totalInvestors = result.totalAmount;
+      } else if (result._id === "activist") {
+        totalActivists = result.totalAmount;
+      }
+    });
+
+    // Send the total amounts as a JSON response
+    res.status(200).json({ totalInvestors, totalActivists });
+  } catch (error) {
+    console.error("Error calculating total amounts:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

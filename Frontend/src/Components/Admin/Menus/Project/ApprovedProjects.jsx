@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Card, CardContent, Typography } from '@mui/material';
 
 export default function ApprovedProjects() {
   const [approvedProjects, setApprovedProjects] = useState([]);
@@ -25,15 +26,27 @@ export default function ApprovedProjects() {
   return (
     <div>
       <h1>Approved Projects</h1>
-      {approvedProjects.length > 0 ? (
-        <ul>
-          {approvedProjects.map(project => (
-            <li key={project._id}>{project.projectTitle}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No approved projects found.</p>
-      )}
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {approvedProjects.length > 0 ? (
+          approvedProjects.map(project => (
+            <Card key={project._id} style={{ width: '300px', margin: '10px' }}>
+              <CardContent>
+                <Typography variant="h5" component="div">
+                  {project.projectTitle}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Land Area: {project.landDetails.area}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Status: {project.status}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <p>No approved projects found.</p>
+        )}
+      </div>
     </div>
   );
 }

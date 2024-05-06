@@ -253,22 +253,24 @@ const updatePaymentDetails = async (req, res) => {
       return res.status(400).json({ message: "Invalid request data" });
     }
 
-    // Find and update the project by ID
-    const updatedProject = await Project.findByIdAndUpdate(
-      projectId,
-      {
-        projectStatus: "Started",
-        startDate,
-        investorId,
-        paidAmount,
-      },
-      { new: true }
-    );
+    // Find the project by ID
+    const project = await Project.findById(projectId);
 
-    // Check if the project was found and updated successfully
-    if (!updatedProject) {
+    if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
+
+    // Calculate the new paid amount by adding the existing paid amount and the new paid amount
+    const newPaidAmount = parseFloat(project.paidAmount) + parseFloat(paidAmount);
+
+    // Update the project with the new paid amount
+    project.projectStatus = "Started";
+    project.startDate = startDate;
+    project.investorId = investorId;
+    project.paidAmount = newPaidAmount.toString(); // Convert back to string
+
+    // Save the updated project to the database
+    const updatedProject = await project.save();
 
     res.json({ message: "Payment details updated", project: updatedProject });
   } catch (error) {
@@ -276,6 +278,7 @@ const updatePaymentDetails = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const getTotalPaidAmount = async (req, res) => {
   try {
@@ -356,6 +359,140 @@ const getAllProjectsExpectedRevenue = async (req, res) => {
   }
 };
 
+const updateProjectDetails = async (req, res) => {
+  try {
+    const { projectId, startDate, endDate, duration, milestone, comments } = req.body;
+
+    // Validate request data
+    if (!projectId) {
+      return res.status(400).json({ message: "Project ID is required" });
+    }
+
+    // Find and update the project by ID
+    const updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { startDate, endDate, duration, milestone, comments },
+      { new: true }
+    );
+
+    // Check if the project was found and updated successfully
+    if (!updatedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Send the updated project as the response
+    res.json({ message: "Project details updated", project: updatedProject });
+  } catch (error) {
+    console.error("Error updating project details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getTotalProjects = async (req, res) => {
+  try {
+    // Perform aggregation to count total projects
+    const totalProjects = await Project.countDocuments();
+
+    // Send the totalProjects as a JSON response
+    res.status(200).json({ totalProjects });
+  } catch (error) {
+    console.error("Error fetching total projects:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+const getTotalStartedProjects = async (req, res) => {
+  try {
+    // Perform aggregation to count total started projects
+    const totalStartedProjects = await Project.aggregate([
+      {
+        $match: { projectStatus: "Started" }
+      },
+      {
+        $count: "totalStartedProjects"
+      }
+    ]);
+
+    // Extract the total count from the aggregation result
+    const totalCount = totalStartedProjects.length > 0 ? totalStartedProjects[0].totalStartedProjects : 0;
+
+    // Send the totalCount as a JSON response
+    res.status(200).json({ totalCount });
+  } catch (error) {
+    console.error("Error fetching total started projects:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getTotalApprovedProjects = async (req, res) => {
+  try {
+    // Perform aggregation to count total approved projects
+    const totalApprovedProjects = await Project.aggregate([
+      {
+        $match: { "landDetails.approved": true }
+      },
+      {
+        $count: "totalApprovedProjects"
+      }
+    ]);
+
+    // Extract the total count from the aggregation result
+    const totalCount = totalApprovedProjects.length > 0 ? totalApprovedProjects[0].totalApprovedProjects : 0;
+
+    // Send the totalCount as a JSON response
+    res.status(200).json({ totalCount });
+  } catch (error) {
+    console.error("Error fetching total approved projects:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getTotalNotApprovedProjects = async (req, res) => {
+  try {
+    // Perform aggregation to count total not approved projects
+    const totalNotApprovedProjects = await Project.aggregate([
+      {
+        $match: { "landDetails.approved": false }
+      },
+      {
+        $count: "totalNotApprovedProjects"
+      }
+    ]);
+
+    // Extract the total count from the aggregation result
+    const totalCount = totalNotApprovedProjects.length > 0 ? totalNotApprovedProjects[0].totalNotApprovedProjects : 0;
+
+    // Send the totalCount as a JSON response
+    res.status(200).json({ totalCount });
+  } catch (error) {
+    console.error("Error fetching total not approved projects:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getTotalPaidProjectAmount = async (req, res) => {
+  try {
+    // Perform aggregation to calculate the total paidAmount
+    const totalPaidAmount = await Project.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalPaidAmount: { $sum: { $toDouble: "$paidAmount" } }
+        }
+      }
+    ]);
+
+    // Extract the total paidAmount from the aggregation result
+    const totalCount = totalPaidAmount.length > 0 ? totalPaidAmount[0].totalPaidAmount : 0;
+
+    // Send the totalCount as a JSON response
+    res.status(200).json({ totalCount });
+  } catch (error) {
+    console.error("Error fetching total paidAmount:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
   createProject,
@@ -368,4 +505,10 @@ module.exports = {
   getInProjects,
   getTotalInPaidAmount,
   getAllProjectsExpectedRevenue,
+  updateProjectDetails,
+  getTotalProjects,
+  getTotalStartedProjects,
+  getTotalApprovedProjects,
+  getTotalNotApprovedProjects,
+  getTotalPaidProjectAmount,
 };

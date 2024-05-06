@@ -50,7 +50,6 @@ const GeoLocationAnalysis = () => {
     document.head.appendChild(script);
 
     return () => {
-      // Clean up function to remove the script when the component unmounts
       document.head.removeChild(script);
     };
   }, []);
@@ -107,7 +106,7 @@ const GeoLocationAnalysis = () => {
         // Get the area name for each vertex
         getAreaNames(vertices);
         // Get weather data for the area
-        getWeatherData(vertices[0].latitude, vertices[0].longitude); // Using the first vertex's coordinates
+        getWeatherData(vertices[0].latitude, vertices[0].longitude); 
       }
     );
 
@@ -276,7 +275,7 @@ const GeoLocationAnalysis = () => {
         </Grid>
       </div>
       <div>
-        <strong>Past 3 Years Weather Data:</strong>
+        <strong>Predicited Weather Data:</strong>
 
         <div id="map" style={{ width: "100%" }}></div>
         <div>
@@ -299,7 +298,7 @@ const GeoLocationAnalysis = () => {
             <Grid item xs={12} sm={6}>
               <Card>
                 <CardContent>
-                  <Typography variant="h6">Past Weather Data Chart</Typography>
+                  <Typography variant="h6">Predicted Weather Data Chart</Typography>
                   <LineChart
                     width={800}
                     height={400}

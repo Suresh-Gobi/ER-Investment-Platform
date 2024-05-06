@@ -84,4 +84,6 @@ router.delete("/userdetailsdelete", authController.deleteUser);
 
 router.put("/userdetailsupdate", authController.updateUser);
 
+router.get("/totalusers", authController.getTotalAmounts);
+
 module.exports = router;

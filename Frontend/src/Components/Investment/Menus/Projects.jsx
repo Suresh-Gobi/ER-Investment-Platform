@@ -314,6 +314,9 @@ export default function Projects() {
               />
             </div>
             <div>
+              <div>
+                <p>Project created successfully</p>
+              </div><br/>
               <Button type="submit" variant="contained" color="primary">
                 Create Project
               </Button>

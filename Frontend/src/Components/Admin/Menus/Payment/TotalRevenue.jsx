@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardContent, Typography } from '@mui/material';
 
 export default function TotalRevenue() {
   const generateFakeData = () => {
@@ -15,9 +16,11 @@ export default function TotalRevenue() {
   const totalRevenue = investorsData.reduce((acc, revenue) => acc + revenue, 0);
 
   return (
-    <div>
-      <h2>Total Earned Revenue</h2>
-      <p>Total Revenue: ${totalRevenue}</p>
-    </div>
+    <Card>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>Total Earned Revenue</Typography>
+        <Typography variant="body1">Total Revenue: {totalRevenue}LKR</Typography>
+      </CardContent>
+    </Card>
   );
 }

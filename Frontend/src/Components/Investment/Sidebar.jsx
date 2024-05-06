@@ -28,6 +28,7 @@ import ProjectsIcon from "@mui/icons-material/Work"; // Import the icon for Proj
 import ChatIcon from "@mui/icons-material/Chat"; // Import the icon for Chat
 import PaymentIcon from "@mui/icons-material/Payment"; // Import the icon for Payment
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the new icon for Profile
+import LogoutIcon from "@mui/icons-material/Logout"; // Import the icon for Logout
 import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
 import Profile from "./Menus/Profile";
@@ -156,6 +157,10 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap component="div">
             Earth Restoration Investor Platform | Environment Activist Dashboard
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <IconButton color="inherit" aria-label="logout">
+            <LogoutIcon /> {/* Assuming LogoutIcon is your icon for logout */}
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

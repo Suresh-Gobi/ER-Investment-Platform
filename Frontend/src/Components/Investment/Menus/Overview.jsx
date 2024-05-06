@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import TotalProjects from './ProjectDetails/TotalProjects';
 
 export default function Overview() {
   const [userDetails, setUserDetails] = useState(null);
@@ -155,6 +156,7 @@ export default function Overview() {
           <Typography variant="body1">Loading user details...</Typography>
         )}
       </CardContent>
+      <TotalProjects/>
     </Card>
   );
 }

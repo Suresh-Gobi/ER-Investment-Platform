@@ -223,9 +223,13 @@ export default function Profile() {
             </Button>
           </Grid>
           <Grid item xs={12}>
+
             <Button type="submit" variant="contained" color="primary">
               Submit
             </Button>
+            <div>
+              <p>Submitted you documents</p>
+            </div>
           </Grid>
         </Grid>
       </form>
