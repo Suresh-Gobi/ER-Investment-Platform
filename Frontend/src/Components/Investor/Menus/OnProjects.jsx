@@ -13,6 +13,7 @@ import {
   Chip,
 } from "@mui/material";
 import ReactSpeedometer from "react-d3-speedometer/slim";
+import Chat from "../ChatInvestor";
 
 export default function MyProject() {
   const [projects, setProjects] = useState([]);
@@ -354,6 +355,11 @@ export default function MyProject() {
                   </CardContent>
                 </Card>
               </DialogContent>
+            </CardContent>
+          </Card>
+          <Card variant="outlined">
+            <CardContent>
+              <Chat resId={selectedProject?.user._id} />
             </CardContent>
           </Card>
         </DialogContent>

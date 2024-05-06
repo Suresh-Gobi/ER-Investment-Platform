@@ -20,4 +20,9 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.delete('/delete', async (req, res) => {
+  await messageController.deleteAllMessages();
+  res.json({ message: 'All messages deleted successfully' });
+});
+
 module.exports = router;

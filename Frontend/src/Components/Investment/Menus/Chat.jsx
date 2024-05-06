@@ -85,6 +85,33 @@ export default function Chat() {
     }
   };
 
+  const handleClearMessages = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/messages/delete",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            recipient: "65fead563078cdddb0119031", // Replace with actual recipient ID
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setMessages([]); // Clear messages in the UI
+        console.log("All messages deleted successfully");
+      } else {
+        console.error("Failed to delete messages:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting messages:", error);
+    }
+  };
+
+
   return (
     <Container>
       <Grid container spacing={3}>
@@ -123,6 +150,14 @@ export default function Chat() {
               onClick={handleSendMessage}
             >
               Send
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: 10 }}
+              onClick={handleClearMessages}
+            >
+              Clear
             </Button>
           </Paper>
         </Grid>

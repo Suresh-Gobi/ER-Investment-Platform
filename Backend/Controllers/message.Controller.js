@@ -42,9 +42,19 @@ function handleMessage(data) {
     }
   }
   
+  async function deleteAllMessages() {
+    try {
+      await Message.deleteMany({}); // Delete all documents in the Message collection
+      console.log('All messages deleted successfully');
+    } catch (err) {
+      console.error('Error deleting messages:', err);
+    }
+  }
+  
 
 module.exports = {
   init,
   handleMessage,
-  getMessages
+  getMessages,
+  deleteAllMessages
 };

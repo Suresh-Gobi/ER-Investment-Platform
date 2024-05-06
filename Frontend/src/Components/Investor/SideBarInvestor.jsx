@@ -31,6 +31,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Overview from "./Menus/Overviews";
 import OnProjects from "./Menus/OnProjects";
 import Payment from "./Menus/Payment";
+// import ProjectsIcon from '@mui/icons-material/Assignment';
+// import PaymentIcon from '@mui/icons-material/Payment';
 
 const drawerWidth = 240;
 
@@ -122,9 +124,9 @@ export default function MiniDrawer() {
       case "Overviews":
         return <OverviewIcon />;
       case "Projects":
-        return <OverviewIcon />;
+        return <ProjectsIcon />;
       case "Payment":
-        return <OverviewIcon />;
+        return <PaymentIcon />;
       default:
         return null;
     }
