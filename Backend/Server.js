@@ -1,39 +1,39 @@
-const express = require("express");
-const http = require("http");
-const socketIO = require("socket.io");
+// server.js
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
 const cors = require('cors');
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('./Utils/passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const authRoutes = require('./Routes/auth.Route');
+const uploadRoutes = require('./Routes/uploadRoutes');
+const messageRoutes = require('./Routes/message.Route');
+const messageController = require('./Controllers/message.Controller');
+const projectRoute = require('./Routes/project.Route');
+const plantRoute = require('./Routes/plant.Route');
 
-const app = express();
+const paymentRoute = require('./Routes/payment.Route');
+
+
 require('dotenv').config();
 
-// Use CORS middleware
-app.use(cors({ origin: '*' }));
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
+
+// Use CORS middleware with origin configuration (adjust as needed)
+app.use(cors({ origin: ['http://localhost:5173'] }));
 
 // Connect to MongoDB using URI from environment variables
-mongoose.connect(
-  process.env.MONGODB_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true }
-);
-
-const db = mongoose.connection;
-
-// Event listeners for MongoDB connection
-db.on("error", (error) => {
-  console.error("MongoDB connection error:", error);
-});
-
-db.once("open", () => {
-  console.log("MongoDB database connection established successfully");
-});
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, })
+  .then(() => console.log("MongoDB database connection established successfully"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
 // Body parser middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Express session middleware
 app.use(session({
@@ -47,16 +47,27 @@ passport(app);
 
 // Use authentication routes
 app.use('/auth', authRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/project', projectRoute);
+app.use('/api/payments', paymentRoute);
+app.use('/api/plants', plantRoute);
+
 
 // Set up Socket.io connection
-const server = http.createServer(app);
-const io = socketIO(server);
-
 io.on("connection", (socket) => {
   console.log("A user connected");
-  // Handle disconnect if needed
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
+  });
+
+  // Initialize io object in messageController
+  messageController.init(io);
+
+  // Socket event for receiving new messages
+  socket.on("newMessage", (message) => {
+    io.emit("newMessage", message); // Broadcast the new message to all clients
   });
 });
 

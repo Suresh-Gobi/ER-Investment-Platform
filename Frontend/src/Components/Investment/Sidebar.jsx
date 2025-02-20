@@ -28,9 +28,12 @@ import ProjectsIcon from "@mui/icons-material/Work"; // Import the icon for Proj
 import ChatIcon from "@mui/icons-material/Chat"; // Import the icon for Chat
 import PaymentIcon from "@mui/icons-material/Payment"; // Import the icon for Payment
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the new icon for Profile
+import LogoutIcon from "@mui/icons-material/Logout"; // Import the icon for Logout
 import Overview from "./Menus/Overview";
 import Projects from "./Menus/Projects";
 import Profile from "./Menus/Profile";
+import Chat from "./Menus/Chat";
+import Payment from "./Menus/Payment";
 
 const drawerWidth = 240;
 
@@ -102,7 +105,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = useState("Overview"); // Set initial value to "Overview"
+  const [selectedItem, setSelectedItem] = useState("Overview");
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -128,7 +131,7 @@ export default function MiniDrawer() {
       case "Payment":
         return <PaymentIcon />;
       case "Profile":
-        return <AccountCircleIcon />; // Replace Profile icon with AccountCircleIcon
+        return <AccountCircleIcon />;
       default:
         return null;
     }
@@ -152,8 +155,12 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Earth Restoration Investor Platform | Environment Activist Dashboard
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <IconButton color="inherit" aria-label="logout">
+            <LogoutIcon /> {/* Assuming LogoutIcon is your icon for logout */}
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -191,6 +198,8 @@ export default function MiniDrawer() {
         {selectedItem === "Overview" && <Overview />}
         {selectedItem === "Projects" && <Projects />}
         {selectedItem === "Profile" && <Profile />}
+        {selectedItem === "Chat" && <Chat />}
+        {selectedItem === "Payment" && <Payment />}
         {/* Add more conditions for other menu items */}
       </Box>
     </Box>

@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const axios = require("axios");
 const authController = require("../Controllers/auth.Controller");
+// const userController = require('../Controllers/user.controller');
 const User = require("../Models/User.Model");
 const router = express.Router();
 const generateToken = require("../Utils/generateToken");
@@ -68,5 +69,21 @@ router.post("/user/signup", authController.signup);
 router.post("/user/verifyotp", authController.verifyOTP);
 
 router.post("/user/login", authController.login);
+// router.post('/account-verification', userController.createAccountVerification);
+
+router.post("/admin/signup", authController.adminSignup);
+
+router.post("/admin/login", authController.adminLogin);
+
+router.post("/investor/login", authController.loginAsInvestor);
+
+//CRUD ADMIN PANEL
+router.get("/userdetails", authController.getAllUsers);
+
+router.delete("/userdetailsdelete", authController.deleteUser);
+
+router.put("/userdetailsupdate", authController.updateUser);
+
+router.get("/totalusers", authController.getTotalAmounts);
 
 module.exports = router;

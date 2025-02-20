@@ -1,95 +1,252 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { TextField, Checkbox, Button, Grid, FormControlLabel } from '@mui/material';
 
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
+export default function Profile() {
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    nic: '',
+    dob: '',
+    nation: '',
+    bankName: '',
+    accountNumber: '',
+    branch: '',
+    bankCode: '',
+    shiftCode: '',
+    verifiedAccount: false,
+    file: null,
+  });
+
+  const token = localStorage.getItem('token');
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: name === 'file' ? files[0] : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('nic', formData.nic);
+    formDataToSend.append('dob', formData.dob);
+    formDataToSend.append('nation', formData.nation);
+    formDataToSend.append('bankName', formData.bankName);
+    formDataToSend.append('accountNumber', formData.accountNumber);
+    formDataToSend.append('branch', formData.branch);
+    formDataToSend.append('bankCode', formData.bankCode);
+    formDataToSend.append('shiftCode', formData.shiftCode);
+    formDataToSend.append('verifiedAccount', formData.verifiedAccount);
+    formDataToSend.append('file', formData.file);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/uploads/upload',
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+
+
+      alert('File uploaded successfully!');
+      
+      // Add any additional handling or redirect logic here
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error('Server Error:', error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Network Error:', error.request);
+      } else {
+        // Something else happened while setting up the request
+        console.error('Error:', error.message);
+      }
+      // Handle error display or any other logic
+    }
+    
+  };
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+    <div>
+      <h1>Profile</h1>
+        <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              label="Name"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              label="Address"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              label="Phone"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="nic"
+              value={formData.nic}
+              onChange={handleChange}
+              label="NIC"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="date"
+              name="dob"
+              value={formData.dob}
+              onChange={handleChange}
+              label="Date of Birth"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="text"
+              name="nation"
+              value={formData.nation}
+              onChange={handleChange}
+              label="Nationality"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="bankName"
+              value={formData.bankName}
+              onChange={handleChange}
+              label="Bank Name"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="accountNumber"
+              value={formData.accountNumber}
+              onChange={handleChange}
+              label="Account Number"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="branch"
+              value={formData.branch}
+              onChange={handleChange}
+              label="Branch"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="bankCode"
+              value={formData.bankCode}
+              onChange={handleChange}
+              label="Bank Code"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              type="text"
+              name="shiftCode"
+              value={formData.shiftCode}
+              onChange={handleChange}
+              label="Shift Code"
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="verifiedAccount"
+                  checked={formData.verifiedAccount}
+                  onChange={(e) =>
+                    setFormData({ ...formData, verifiedAccount: e.target.checked })
+                  }
+                />
+              }
+              label="Verified Account"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              component="label"
+              htmlFor="fileInput"
+            >
+              Upload File
+              <input
+                type="file"
+                id="fileInput"
+                name="file"
+                onChange={handleChange}
+                required
+                style={{ display: 'none' }}
+              />
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+            <div>
+              {/* <p>Submitted you documents</p> */}
+            </div>
+          </Grid>
+        </Grid>
+      </form>
     </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-export default function BasicTabs() {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleUploadNicCopy = (event) => {
-    // Handle NIC copy upload logic here
-  };
-
-  const handleUploadBankBookCopy = (event) => {
-    // Handle bank book copy upload logic here
-  };
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="General" {...a11yProps(0)} />
-          <Tab label="Account Verification" {...a11yProps(1)} />
-          <Tab label="Account Setting" {...a11yProps(2)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        {/* Content for General tab */}
-        <Typography>General Information</Typography>
-        {/* Add more fields as needed */}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        {/* Content for Account Verification tab */}
-        <Typography>Account Verification</Typography>
-        <TextField label="Full Name" variant="outlined" />
-        <TextField label="Address" variant="outlined" />
-        <TextField label="Phone Number" variant="outlined" />
-        {/* Add more text fields for other details */}
-        <Button variant="outlined" component="label">
-          Upload NIC Copy
-          <input type="file" hidden onChange={handleUploadNicCopy} />
-        </Button>
-        <Button variant="outlined" component="label">
-          Upload Bank Book Copy
-          <input type="file" hidden onChange={handleUploadBankBookCopy} />
-        </Button>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        {/* Content for Account Setting tab */}
-        <Typography>Account Settings</Typography>
-        {/* Add account setting options */}
-      </CustomTabPanel>
-    </Box>
   );
 }

@@ -1,42 +1,106 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema({
-  projectName: {
-    type: String,
-    required: true
+  projectTitle: String,
+  projectCategory: String,
+  projectDescription: String,
+  projectTimeline: String,
+  plantsToPlant: String,
+  searchTags: String,
+
+  InvestmentRange: String,
+  InitialInvestment: String,
+  EstimatedTotal: String,
+  ExpectedRevenue: String,
+
+  landDetails: {
+    landLocation: String,
+    landArea: String,
+    projectDocument : String,
+    approved: {
+      type: Boolean,
+      default: false,
+    },
+    reference: String,
   },
-  projectDescription: {
-    type: String,
-    required: true
-  },
-  projectCategory: {
-    type: String,
-    enum: ['Agriculture', 'Information Technology', 'Health', 'Education', 'Religious'],
-    required: true
-  },
-  projectTimeline: {
+
+  //Project Payment
+  projectStatus: String,
+  paidAmount: String,
+  investorId: String,
+
+  // Project Progress
+  startDate: String,
+  endDate: String,
+  duration: String,
+  mileston: String,
+  comments: String,
+
+  // Project land analyze live with iot device
+  deviceID: String,
+  timestamp: {
     type: Date,
-    required: true
+    default: Date.now,
   },
-  role: {
-    type: String,
-    enum: ['Environment Activist', 'Investor', 'Project Owner', 'Administrator', 'Editor'],
-    required: true
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
   },
-  ProjectStatus: {
-    type: String,
-    enum: ['Hold', 'On Going', ''],
+  soilHealth: {
+    pHLevel: Number,
+    nutrientLevel: {
+      nitrogen: Number,
+      phosphorus: Number,
+      potassium: Number,
+    },
+    waterLevel: Number,
   },
-  proposalRef: {
+  humidity: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "%",
+    },
+  },
+  temperature: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "°C",
+    },
+  },
+  farmingArea: {
+    type: Number,
+  },
+  plantHealth: {
+    biomass: Number,
+  },
+  co2Concentration: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "ppm",
+    },
+  },
+  h2oConcentration: {
+    value: Number,
+    unit: {
+      type: String,
+      default: "ppm",
+    },
+  },
+  
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Proposal'
+    ref: "User",
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
 });
 
-const Project = mongoose.model('Project', projectSchema);
-
-module.exports = Project;
+module.exports = mongoose.model("Project", projectSchema);
